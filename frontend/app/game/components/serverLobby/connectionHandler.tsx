@@ -111,5 +111,14 @@ const join = (client: any, setCurrentRoom: Function) =>{
     .catch((e) => console.log('error when fetching user data: '+e));
 }
 
-export default {reconnect, createRoom, consumeReservation, join, joinByID};
+const leave = (currentRoom: any, setCurrentRoom: Function) => {
+    try{
+        currentRoom.leave();
+    }catch(e){
+        console.log('connectionHandler leave: error when trying to leave room '+e)
+    }
+    setCurrentRoom(undefined);
+}
+
+export default {reconnect, createRoom, consumeReservation, join, joinByID, leave};
 
