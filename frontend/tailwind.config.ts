@@ -54,6 +54,11 @@ const config: Config = {
       },
       colors: {
         'slate-1000': '#020606',
+        'p1': "#0D0729",
+        'p2': "#160E36",
+        'p3': "#1E0C3E",
+        'p4': "#55018C",
+        'p5': "#5F3094",
       },
       keyframes: {
         wiggle: {
