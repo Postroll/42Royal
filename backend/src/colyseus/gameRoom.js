@@ -31,7 +31,7 @@ export class gameRoom extends colyseus.Room {
 
     // Authorize client based on provided options before WebSocket handshake is complete
     async onAuth (client, options, request) {
-        const ret = await authLogic.GetUser(request.rawHeaders, client, this.roomId);
+        const ret = await authLogic.AddRoomData(request.rawHeaders, client, this.roomId);
         if (ret)
             return false;
         return true;
@@ -45,14 +45,10 @@ export class gameRoom extends colyseus.Room {
     // When a client leaves the room
     async onLeave (client, consented) {
         // flag client as inactive for other users
-        console.log('-------------')
-        console.log('deteced onleave');
-        console.log(consented)
-        console.log(client.ref._closeCode)
-        console.log('-------------')
+        const code = client.ref._closeCode;
         this.state.players.get(client.sessionId).connected = false;
         try {
-            if (consented || client.ref._closeCode === 4000){
+            if (consented || code === 4000){
                 console.log('consented leave');
                 throw new Error("consented leave");
             }
@@ -62,6 +58,7 @@ export class gameRoom extends colyseus.Room {
             this.state.players.get(client.sessionId).connected = true;
         } catch (e) {
             // 20 seconds expired. let's remove the client.
+            await authLogic.RemoveRoomData(client.sessionId, code);
             this.state.players.delete(client.sessionId);
             console.log('leaving room');
         }  

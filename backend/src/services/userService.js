@@ -93,4 +93,9 @@ export default class UserService {
         const user = await this.GetOneUserLogin(login);
         return user;
     }
+
+    async GetOneFromWebSocket(webSocketID){
+        const user = await User.findOne({"webSocket.sessionID": webSocketID});
+        return user;
+    }
 }

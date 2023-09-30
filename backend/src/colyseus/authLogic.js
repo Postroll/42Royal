@@ -14,17 +14,20 @@ export default class AuthLogic {
     //  client: The client instance. Created for the new room
     //  roomID: the roomID
     //return: 1 if there was an issue. 0 otherwise
-    async GetUser(rawHeaders, client, roomID){
-        const user = await userService.GetOneFromRawHeaders(rawHeaders);
+    async AddRoomData(rawHeaders, client, roomID){
+        let user;
+        try {
+            user = await userService.GetOneFromRawHeaders(rawHeaders);
+        }
+        catch(e){
+            console.log('AddRoomData error getting user '+ e)
+            return 1;
+        }
         
         if (!user){
             console.log('AuthLogic.GetUser Error: user not found');
             return 1;
         }
-        console.log('-----------------------')
-        console.log('old user')
-        console.log(user.webSocket);
-        console.log('-----------------------')
         try{
             const sessionID = user?.webSocket?.sessionID;
             if (sessionID){
@@ -40,7 +43,37 @@ export default class AuthLogic {
             roomID: roomID,
         }
         await user.updateOne(user);
-        const updatedUser = await userService.GetOneUserLogin(user.login);
+        // const updatedUser = await userService.GetOneUserLogin(user.login);
+        return 0;
+    }
+
+    //Identify the user from its websocket id. Delete its room data and update.
+    //Params:
+    //  client: The client websocketID
+    //  code: code returned in the onleave function
+    //return: 1 if there was an issue. 0 otherwise. Code 4000 happen when the
+    // user created another room and thus his data are already overriden
+    async RemoveRoomData(clientWS, code){
+        if (code == 4000)
+            return 0;
+        let user;
+        try{
+            user = await userService.GetOneFromWebSocket(clientWS);
+        }catch(e){
+            console.log('RemoveRoomData error getting client '+e)
+            return 1;
+        }
+        if (!user){
+            console.log('AuthLogic.RemoveRoomData: user not found.');
+            return 1;
+        }
+        user.webSocket = {
+            sessionID: '',
+            reconnectToken: '',
+            roomID: '',
+        }
+        await user.updateOne(user);
+        // const updatedUser = await userService.GetOneUserLogin(user.login);
         return 0;
     }
 }
