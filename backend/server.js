@@ -11,7 +11,7 @@ import passport from 'passport';
 
 import colyseus from "colyseus";
 import http from "http";
-import { gameRoom } from './src/colyseus/gameRoom.js';
+import { gameRoom } from './src/colyseus/rooms/gameRoom/gameRoom.js';
 import { monitor } from '@colyseus/monitor';
 import { LobbyRoom } from '@colyseus/core';
 

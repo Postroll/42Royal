@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 interface ILobbyInfo{
-    
+    leave: Function,
 }
 
-export default function GameLobbyInfoComponent(){
+export default function GameLobbyInfoComponent({leave}: ILobbyInfo){
     const [displayTooltip, setDisplayTooltip] = useState<boolean>(false);
 
     const copyToClipboard = async () => {
@@ -23,9 +23,9 @@ export default function GameLobbyInfoComponent(){
     }
     return (
         <div id='serverInfo' className=" h-1/2 flex flex-col items-center p-5 gap-1 relative">
-            <div className='absolute top-0 left-0 text-white p-2 text-sm'>
+            <button onClick={() => leave()} className='absolute top-0 left-0 text-white p-2 text-sm hover:underline underline-offset-1'>
                 Back to server list
-            </div>
+            </button>
             <div className="relative text-white font-bold bg-p4 pt-2 px-6 py-3 rounded-xl mt-1/12 flex whitespace-pre-wrap items-center hover:bg-p4/80 active:animate-shrink" onClick={copyToClipboard}>
                 <div>Room </div>
                 <div id='roomID' className='pr-4'>{'XV_6eyT1'}</div>

@@ -1,10 +1,10 @@
-import User from "../models/user.js";
-import UserService from "../services/userService.js";
+import User from "../../../models/user.js";
+import UserService from "../../../services/userService.js";
 import { matchMaker } from '@colyseus/core';
 
 const userService = new UserService();
 
-export default class AuthLogic {
+export default class GameRoomService {
     constructor () {}
 
     //Identify the user from express-session found in header. Check if the user is in a room
@@ -23,7 +23,7 @@ export default class AuthLogic {
             console.log('AddRoomData error getting user '+ e)
             return 1;
         }
-        
+         
         if (!user){
             console.log('AuthLogic.GetUser Error: user not found');
             return 1;
@@ -31,8 +31,9 @@ export default class AuthLogic {
         try{
             const sessionID = user?.webSocket?.sessionID;
             if (sessionID){
-                const test = matchMaker.getRoomById(user?.webSocket?.roomID);
-                test.clients[0].leave(4000, 'false');
+                const room = matchMaker.getRoomById(user?.webSocket?.roomID);
+                if (room)
+                    room.clients[0].leave(4000, 'false');
             }
         } catch(e){
             console.log('error when cleaning prev client session: '+e);
@@ -76,4 +77,28 @@ export default class AuthLogic {
         // const updatedUser = await userService.GetOneUserLogin(user.login);
         return 0;
     }
+
+    async GetUserDataFromWS(clientWS){
+        let user;
+        try{
+            user = await userService.GetOneFromWebSocket(clientWS);
+        }catch(e){
+            console.log('RemoveRoomData error getting client '+e)
+            return undefined;
+        }
+        if (!user){
+            console.log('AuthLogic.RemoveRoomData: user not found.');
+            return undefined;
+        }
+        return user;
+    }
+
+    async InitPlayer(clientWS){
+        const user = await this.GetUserDataFromWS(clientWS);
+        if (user == undefined)
+            return null;
+        return {username: user.username, elo: user.elo, photo: user.photo, campus: user.campus, country: user.country};
+    }
+
+
 }

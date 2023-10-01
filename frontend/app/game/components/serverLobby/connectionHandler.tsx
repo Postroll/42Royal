@@ -55,7 +55,6 @@ const consumeReservation = async (reservation: object, client: any, setCurrentRo
         const room = await client.consumeSeatReservation(reservation);
         console.log("consumeReservation successfully");
         setCurrentRoom(room);
-        console.log(room);
         const reconnectionToken = room.reconnectionToken.substring(room.reconnectionToken.indexOf(':') + 1, room.reconnectionToken.length);
         localStorage.setItem('reconnectionToken', reconnectionToken);
     } catch (e) {

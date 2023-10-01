@@ -7,6 +7,7 @@ const userSchema = new Schema(
     login: String,
     username: String,
     email: String,
+    elo: { type: Number, default: 1000 },
     photo: { type: String, default: 'https://w7.pngwing.com/pngs/184/113/png-transparent-user-profile-computer-icons-profile-heroes-black-silhouette.png'},
     intra: String,
     campus: String,

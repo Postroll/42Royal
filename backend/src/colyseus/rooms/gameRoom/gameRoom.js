@@ -1,32 +1,28 @@
 import colyseus from "colyseus";
+// import { defineTypes, MapSchema, ArraySchema, Schema } from '@colyseus/schema';
+
+import Game from "../../Schema/gameSchema.js";
+import Player from '../../Schema/playerSchema.js';
+import ChatMessage from '../../Schema/chatMessageSchema.js'
+
 import AuthLogic from "./authLogic.js";
-import { Schema } from '@colyseus/schema';
-import { defineTypes, MapSchema } from '@colyseus/schema';
+import GameRoomService from "./gameRoomService.js";
 
-class Player extends Schema {
-    
-}
-
-defineTypes(Player , {
-    x: "number"
-});
-
-export class State extends Schema {
-    constructor() {
-        super();
-        this.players = new MapSchema();
-    }
-}
-defineTypes(State, {
-    players: { map: Player }
-});
 
 const authLogic = new AuthLogic();
+const gameRoomService = new GameRoomService();
 
 export class gameRoom extends colyseus.Room {
     // When room is initialized
     onCreate (options) {
-        this.setState(new State());
+        this.setState(new Game());
+
+        this.onMessage("chat", (client, data) => {
+            console.log(data);
+            const player = this.state.players.get(client.sessionId);
+            // this.state.chat.push(new ChatMessage(player.username, player.photo, data));
+            this.broadcast("chat", player.username+'``` '+data)
+        });
     }
 
     // Authorize client based on provided options before WebSocket handshake is complete
@@ -38,8 +34,9 @@ export class gameRoom extends colyseus.Room {
     }
 
     // When client successfully join the room
-    onJoin (client, options, auth) {
-        this.state.players.set(client.sessionId, new Player());
+    async onJoin (client, options, auth) {
+        const {username, elo, photo, country, campus} = await gameRoomService.InitPlayer(client.id);
+        this.state.players.set(client.sessionId, new Player(username, elo, photo, country, campus));
     }
 
     // When a client leaves the room

@@ -9,6 +9,8 @@ import TableGame from '@/components/game/tableGame';
 import connectionHandler from './components/serverLobby/connectionHandler'
 
 import IUser from '../../utils/IUser'
+import IMessage from '@/utils/IMessage';
+
 
 export default function Game(){
     const [client, setClient] = useState<any>();
@@ -19,9 +21,18 @@ export default function Game(){
     const [currentRoom, setCurrentRoom] = useState<any>();
     const initializedLobby = useRef(false);
 
+    const [data, setData] = useState<any>();
+    const dataRef = useRef<any[]>([]);
+    dataRef.current = data;
+
     useEffect(()=>{
         console.log('current room')
         console.log(currentRoom);
+        if (currentRoom){
+            currentRoom.onStateChange((state: any) =>{
+                setData(state);
+            })
+        }
     }, [currentRoom])
 
     useEffect(() => {
@@ -95,15 +106,22 @@ export default function Game(){
 
     return (
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-[#190C38] flex flex-col'>
-            {/* <GameLobbyComponent /> */}
-            <TableGame setPage={setPage} page={page} count={count} rooms={rooms} refresh={updateRooms} joinByID={joinByIDproxy}/>
-            <div className='flex gap-4'>
-                <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.join(client, setCurrentRoom)}>Join</button>
-                <button className='text-white text-xl bg-slate-500' onClick={() =>console.log('test')}>Join by ID</button>
-                <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.createRoom(client, setCurrentRoom)}>Create</button>
-                <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.leave(currentRoom, setCurrentRoom)}>Leave</button>
-                <button className='text-white text-xl bg-slate-500' onClick={()=>console.log(currentRoom)}>Display room data</button>
-            </div>
+            {
+                !currentRoom ? (
+                    <div>
+                        <TableGame setPage={setPage} page={page} count={count} rooms={rooms} refresh={updateRooms} joinByID={joinByIDproxy}/>
+                        <div className='flex gap-4'>
+                            <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.join(client, setCurrentRoom)}>Join</button>
+                            <button className='text-white text-xl bg-slate-500' onClick={() =>console.log('test')}>Join by ID</button>
+                            <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.createRoom(client, setCurrentRoom)}>Create</button>
+                            <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.leave(currentRoom, setCurrentRoom)}>Leave</button>
+                            <button className='text-white text-xl bg-slate-500' onClick={()=>console.log(currentRoom)}>Display room data</button>
+                        </div>
+                    </div>
+                ) : (
+                    <GameLobbyComponent currentRoom={currentRoom} leave={() => connectionHandler.leave(currentRoom, setCurrentRoom)} data={data}/>
+                )
+            }
         </div>
     )
 }
