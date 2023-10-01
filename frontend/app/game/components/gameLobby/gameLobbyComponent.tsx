@@ -18,9 +18,9 @@ export default function GameLobbyComponent({currentRoom, leave, data}: ICurrentR
     return (
         <div className="h-full w-full flex gap-2 px-6 pt-5 pb-10">
             <div className="h-full w-full flex gap-2  shadow-[10px_35px_100px_-15px_rgba(1,1,1,1)] bg-gradient-to-br from-[#22003b] to-p2 rounded-lg">
-                <div className='flex flex-col w-1/3'>
-                    <GameLobbyInfoComponent leave={leave}/>  
-                    <GameLobbyPlayerListComponent data={data}/>
+                <div className='flex flex-col w-1/3 max-w-1/3'>
+                    <GameLobbyInfoComponent leave={leave} currentRoom={currentRoom} data={data}/>  
+                    <GameLobbyPlayerListComponent data={data} currentRoom={currentRoom}/>
                 </div>
                 <div className="bg-transparent flex w-full flex-col relative">
                     <div className='flex justify-around relative max-h-[66%]'>

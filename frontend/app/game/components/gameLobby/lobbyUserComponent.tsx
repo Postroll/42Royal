@@ -7,11 +7,12 @@ interface IUserList{
     username: string,
     elo: string,
     title: string,
+    state: boolean,
 }
 
-export default function LobbyUserComponent({photo, username, elo, title}: IUserList){
+export default function LobbyUserComponent({photo, username, elo, title, state}: IUserList){
     return (
-        <div className="flex gap-4 items-center justify-start bg-p1 text-white py-1 px-4 rounded-full overflow-x-hidden">
+        <div className={`flex gap-4 items-center justify-start ${ state ? 'bg-green-900/80' : 'bg-p1/80'} text-white py-1 px-4 rounded-full overflow-x-hidden`}>
             <Image className="h-5 w-auto" src={profileIcon} alt='profile'/>
             <div className="justify-self-start flex flex-col">
                 <div className="text-gray-200 text-sm -mb-1">

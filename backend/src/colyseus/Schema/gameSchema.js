@@ -7,9 +7,13 @@ export default class Game extends Schema {
         super();
         this.players = new MapSchema();
         this.chat = new ArraySchema();
+        this.readyCount = 0;
+        this.status = 0;
     }
 }
 defineTypes(Game, {
     players: { map: Player },
     chat: [ ChatMessage ],
+    readyCount: "number",
+    status: "number",
 });

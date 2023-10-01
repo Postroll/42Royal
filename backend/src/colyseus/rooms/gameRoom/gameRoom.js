@@ -20,8 +20,17 @@ export class gameRoom extends colyseus.Room {
         this.onMessage("chat", (client, data) => {
             console.log(data);
             const player = this.state.players.get(client.sessionId);
-            // this.state.chat.push(new ChatMessage(player.username, player.photo, data));
             this.broadcast("chat", player.username+'``` '+data)
+        });
+        this.onMessage("readyState", (client, data) => {
+            const player = this.state.players.get(client.sessionId);
+            if (player.state != data)
+                this.state.readyCount +=  (data ? 1 : -1);
+            player.state = data;
+            if (this.state.readyCount == this.state.players.size)
+                this.state.status = 1;
+            else
+                this.state.status = 0;
         });
     }
 
@@ -37,6 +46,7 @@ export class gameRoom extends colyseus.Room {
     async onJoin (client, options, auth) {
         const {username, elo, photo, country, campus} = await gameRoomService.InitPlayer(client.id);
         this.state.players.set(client.sessionId, new Player(username, elo, photo, country, campus));
+        this.broadcast("chat", username+'``` Joined the game!')
     }
 
     // When a client leaves the room
@@ -56,7 +66,9 @@ export class gameRoom extends colyseus.Room {
         } catch (e) {
             // 20 seconds expired. let's remove the client.
             await authLogic.RemoveRoomData(client.sessionId, code);
+            const player = this.state.players.get(client.sessionId);
             this.state.players.delete(client.sessionId);
+            this.broadcast("chat", player.username+'``` Left the game!')
             console.log('leaving room');
         }  
     }
