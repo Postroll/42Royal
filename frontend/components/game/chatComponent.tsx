@@ -9,9 +9,7 @@ interface IChat{
 
 export default function ChatComponent({currentRoom, data}: IChat){
     const [myMessage, setMyMessage] = useState<string>('');
-    const initialized = useRef(false);
 
-    const [messages, setMessages] = useState<IMessage[]>([]);
     const dataRef = useRef<IMessage[]>([]);
     dataRef.current = data;
 
@@ -22,22 +20,11 @@ export default function ChatComponent({currentRoom, data}: IChat){
         setMyMessage('');
     }
 
-    useEffect(()=>{
-        if (!initialized.current){
-            initialized.current = true;
-            currentRoom.onMessage("chat", (msg: string)=>{
-                const newMessage = {photo: 'profile.svg', username: msg.substring(0, msg.indexOf('```')), message:msg.substring(msg.indexOf('```') + 3)};
-                setMessages((messages) => [newMessage, ...messages]);
-                console.log(msg);
-            })
-        };
-    }, [])
-
     return (
         <div className="max-h-[50%] h-full bottom-0 w-full absolute gap-2 flex flex-col justify-end p-2 overflow-y-auto">
-            <div className='h-full flex flex-col-reverse gap-1 overflow-y-auto rotate gradient-mask-t-40'>
+            <div className='h-full flex flex-col-reverse gap-1 overflow-y-auto gradient-mask-t-40'>
                 {
-                    messages. map((msg) => {
+                    data.chat.slice().reverse().map((msg) => {
                         return <ChatMessageComponent username={msg.username} photo='profile.svg' message={msg.message}/>
                     })
                 }

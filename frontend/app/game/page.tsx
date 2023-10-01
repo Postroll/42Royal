@@ -61,7 +61,7 @@ export default function Game(){
 
     useEffect(() => {
         const myInterval = setInterval(() =>{
-            if (!client)
+            if (!client || currentRoom)
                 return;
             try{
                 updateRooms();
@@ -134,7 +134,7 @@ export default function Game(){
                     data?.statusCode == 0 || data?.statusCode == 1 ? (
                         <GameLobbyComponent currentRoom={currentRoom} leave={() => connectionHandler.leave(currentRoom, setCurrentRoom)} data={data}/>
                     ):(
-                        <GameComponent />
+                        <GameComponent currentRoom={currentRoom} data={data}/>
                     )
                 )
             }

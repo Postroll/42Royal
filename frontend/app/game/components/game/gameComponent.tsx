@@ -1,22 +1,22 @@
 import Splitter, { SplitDirection } from '@devbookhq/splitter'
 import { useEffect } from 'react'
 
-export default function GameComponent(){
-    useEffect(()=>{
-        console.log('relaoaidng')
-    },[])
+import PlayerDisplayComponent from './playerDisplayComponent'
+
+interface IGame{
+    currentRoom: any,
+    data: any,
+}
+
+export default function GameComponent({currentRoom, data}: IGame){
+
 
     return (
-        <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-slate-800'>
+        <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-slate-800 absolute top-0'>
             <div className='p-2 flex flex-col h-full w-screen gap-2'>
-                <div className='flex bg-slate-700 rounded-md min-h-12 justify-center gap-10 items-center'>
-                    <div className='flex'>
-                        P1
-                    </div>
-                    <div className='flex'>
-                        P2
-                    </div>
-                </div>
+                {/* <div className='flex bg-slate-700 rounded-md min-h-12 justify-center gap-10 items-center'> */}
+                    <PlayerDisplayComponent data={data}/>
+                {/* </div> */}
                 <div className="grow overflow-y-auto">
                     <Splitter classes={["overflow-y-auto"]} direction={SplitDirection.Horizontal} minWidths={[300, 300, 300]} gutterClassName="bg-transparent m-px">
                         <div className='h-full bg-slate-600 whitespace-pre-wrap rounded-md overflow-y-auto break-words p-2'>

@@ -1,7 +1,8 @@
 import colyseus from "colyseus";
-// import { defineTypes, MapSchema, ArraySchema, Schema } from '@colyseus/schema';
+import { defineTypes, MapSchema, ArraySchema, Schema } from '@colyseus/schema';
 
 import Game from "../../Schema/gameSchema.js";
+import ChatMessage from "../../Schema/chatMessageSchema.js";
 import Player from '../../Schema/playerSchema.js';
 
 import AuthLogic from "./authLogic.js";
@@ -20,7 +21,8 @@ export class gameRoom extends colyseus.Room {
         this.onMessage("chat", (client, data) => {
             console.log(data);
             const player = this.state.players.get(client.sessionId);
-            this.broadcast("chat", player.username+'``` '+data)
+            this.state.chat.push(new ChatMessage(player.username, player.photo, data));
+            // this.broadcast("chat", player.username+'``` '+data)
         });
 
         //update individual client readyState and in case all clients are ready change game status
@@ -41,8 +43,10 @@ export class gameRoom extends colyseus.Room {
         if (this.state.statusCode == 1){
             this.state.timer -= deltaTime;
             this.state.status = "Game starting in " + Math.round(this.state.timer/1000);
-            if (this.state.timer < 0)
-                this.state.statusCode = 2;
+            if (this.state.timer < 0){
+                this.state.statusCode = 2; 
+                this.lock();
+            }
         }
     }
     // Authorize client based on provided options before WebSocket handshake is complete
