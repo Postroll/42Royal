@@ -17,20 +17,26 @@ export class gameRoom extends colyseus.Room {
     onCreate (options) {
         this.setState(new Game());
 
+        //relay chat message to all clients
         this.onMessage("chat", (client, data) => {
             console.log(data);
             const player = this.state.players.get(client.sessionId);
             this.broadcast("chat", player.username+'``` '+data)
         });
+
+        //update individual client readyState and in case all clients are ready change game status
         this.onMessage("readyState", (client, data) => {
             const player = this.state.players.get(client.sessionId);
             if (player.state != data)
                 this.state.readyCount +=  (data ? 1 : -1);
             player.state = data;
-            if (this.state.readyCount == this.state.players.size)
+            if (this.state.readyCount == this.state.players.size){
                 this.state.status = 1;
-            else
-                this.state.status = 0;
+                clearTimeout
+                setTimeout(() => {
+                    this.state.status = 2;
+                }, 3000);
+            }
         });
     }
 

@@ -1,6 +1,11 @@
 import Splitter, { SplitDirection } from '@devbookhq/splitter'
+import { useEffect } from 'react'
 
 export default function GameComponent(){
+    useEffect(()=>{
+        console.log('relaoaidng')
+    },[])
+
     return (
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-slate-800'>
             <div className='p-2 flex flex-col h-full w-screen gap-2'>

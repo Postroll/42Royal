@@ -125,7 +125,11 @@ export default function Game(){
                         </div>
                     </div>
                 ) : (
-                    <GameLobbyComponent currentRoom={currentRoom} leave={() => connectionHandler.leave(currentRoom, setCurrentRoom)} data={data}/>
+                    data?.status != 2 ? (
+                        <GameLobbyComponent currentRoom={currentRoom} leave={() => connectionHandler.leave(currentRoom, setCurrentRoom)} data={data}/>
+                    ):(
+                        <GameComponent />
+                    )
                 )
             }
         </div>
