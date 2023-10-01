@@ -1,16 +1,13 @@
+import { Play } from "next/font/google"
+import PlayerDisplayModel from "./playerDIsplayModel"
 
 export default function PlayerDisplayComponent({data}: any){
-    console.log(data)
     return (
-        <div className='flex bg-slate-700 rounded-md min-h-12 justify-center gap-10 items-center overflow-y-hidden overflow-x-auto'>
-        {
+        <div className='w-full flex bg-slate-700 rounded-md h-fit p-2 max-h-24 justify-center gap-1 items-center overflow-y-hidden overflow-x-auto'>
+            {
                 data?.players &&
                 [...data?.players].map((player) => {
-                    return (
-                        <div className="text-white text-xl">
-                            {player[1].username}
-                        </div>
-                    )
+                    return <PlayerDisplayModel username={player[1].username} score={player[1].score} photo="profile.svg"/>
                 })
             }
         </div>

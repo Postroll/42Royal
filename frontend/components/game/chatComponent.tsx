@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import ChatMessageComponent from "./chatMessageComponent";
 import IMessage from "@/utils/IMessage";
 
@@ -24,7 +24,7 @@ export default function ChatComponent({currentRoom, data}: IChat){
         <div className="max-h-[50%] h-full bottom-0 w-full absolute gap-2 flex flex-col justify-end p-2 overflow-y-auto">
             <div className='h-full flex flex-col-reverse gap-1 overflow-y-auto gradient-mask-t-40'>
                 {
-                    data.chat.slice().reverse().map((msg) => {
+                    data.chat.slice().reverse().map((msg: IMessage) => {
                         return <ChatMessageComponent username={msg.username} photo='profile.svg' message={msg.message}/>
                     })
                 }

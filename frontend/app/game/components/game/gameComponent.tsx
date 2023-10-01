@@ -1,7 +1,14 @@
-import Splitter, { SplitDirection } from '@devbookhq/splitter'
-import { useEffect } from 'react'
+import { Split } from '@geoffcox/react-splitter';
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import "@uiw/react-textarea-code-editor/dist.css";
 
 import PlayerDisplayComponent from './playerDisplayComponent'
+
+const CodeEditor = dynamic(
+  () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
+  { ssr: false }
+);
 
 interface IGame{
     currentRoom: any,
@@ -9,26 +16,73 @@ interface IGame{
 }
 
 export default function GameComponent({currentRoom, data}: IGame){
+    const [code, setCode] = useState<string>('');
 
+    const handleCodeChange = (e: any) =>{
+        e.preventDefault;
+        setCode(e.target.value);
+    }
+
+    useEffect(() => {
+        console.log('reloadddd');
+    },[])
 
     return (
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-slate-800 absolute top-0'>
             <div className='p-2 flex flex-col h-full w-screen gap-2'>
-                {/* <div className='flex bg-slate-700 rounded-md min-h-12 justify-center gap-10 items-center'> */}
-                    <PlayerDisplayComponent data={data}/>
-                {/* </div> */}
-                <div className="grow overflow-y-auto">
+                <PlayerDisplayComponent data={data}/>
+                <Split minPrimarySize='250px' minSecondarySize='250px' initialPrimarySize='40%'>
+                    <div className='overflow-y-auto h-full'>{text}{text}{text}{text}{text}{text}</div>
+                    <Split horizontal minPrimarySize='100px' minSecondarySize='100px'>
+                        <div className='overflow-auto h-full'>
+                            <CodeEditor
+                                className='w-tc-editor-text rounded border-1'
+                                minHeight={100}
+                                value={code}
+                                language="c"
+                                placeholder=""
+                                onChange={handleCodeChange}
+                                padding={15}
+                                style={{
+                                    overflow: "visible",
+                                    height: "max-content",
+                                    minHeight: "100%",
+                                    fontSize: 12,
+                                    backgroundColor: "#f5f5f5",
+                                    fontFamily:
+                                        "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace"
+                                }}
+                            />
+                        </div>
+                        <div>This is the bottom pane.</div>
+                    </Split>
+                </Split>
+                {/* <div className="overflow-y-auto">
                     <Splitter classes={["overflow-y-auto"]} direction={SplitDirection.Horizontal} minWidths={[300, 300, 300]} gutterClassName="bg-transparent m-px">
                         <div className='h-full bg-slate-600 whitespace-pre-wrap rounded-md overflow-y-auto break-words p-2'>
                             {text}
                             {text}
                         </div>
-                        <Splitter direction={SplitDirection.Vertical} minHeights={[100,100]} gutterClassName="bg-transparent m-px">
-                            <div className='h-full bg-slate-500 rounded-md flex flex-col overflow-y-auto break-words grow p-2'>Tile 3</div>
+                        <Splitter classes={["overflow-auto"]} direction={SplitDirection.Vertical} minHeights={[100,100]} gutterClassName="bg-transparent m-px rounded-lg">
+                                <CodeEditor
+                                    className='rounded-md'
+                                    minHeight={100}
+                                    value={code}
+                                    language="c"
+                                    placeholder=""
+                                    onChange={handleCodeChange}
+                                    padding={15}
+                                    style={{
+                                    fontSize: 12,
+                                    backgroundColor: "#f5f5f5",
+                                    fontFamily:
+                                        "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace"
+                                    }}
+                                
                             <div className='h-full bg-slate-400 rounded-md flex flex-col overflow-y-auto break-words grow p-2'>Tile 4</div>
                         </Splitter>
                     </Splitter>
-                </div>
+                </div> */}
             </div>
         </div>
     )
