@@ -84,9 +84,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    require('flowbite/plugin')
-  ],
+  plugins: [require("tailwind-gradient-mask-image")],
 }
 
 export default config

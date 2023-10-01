@@ -10,7 +10,6 @@ import Card from "@/components/shared/card"
 import Table from "@/components/shared/table"
 
 /*images and logo*/
-import bg from "../assets/bg.png"
 import bg2 from "../assets/bg3.png"
 import players_logo from "../assets/players.svg"
 import game_logo from "../assets/game.svg"

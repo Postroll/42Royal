@@ -1,16 +1,22 @@
 'use client'
 import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import * as Colyseus from "colyseus.js";
 
-import GameLobbyComponent from './components/gameLobby/gameLobbyComponent';
-import GameComponent from './components/game/gameComponent';
-import TableGame from '@/components/game/tableGame';
 
+import TableGame from '@/components/game/tableGame';
 import connectionHandler from './components/serverLobby/connectionHandler'
 
 import IUser from '../../utils/IUser'
 import IMessage from '@/utils/IMessage';
 
+const GameLobbyComponent = dynamic(() => import('./components/gameLobby/gameLobbyComponent'), {
+    loading: () => <h1>Loading....</h1>
+})
+
+const GameComponent = dynamic(() => import('./components/game/gameComponent'), {
+    loading: () => <h1>Loading....</h1>
+})
 
 export default function Game(){
     const [client, setClient] = useState<any>();
