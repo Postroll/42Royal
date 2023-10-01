@@ -17,7 +17,8 @@ export default function ChatComponent({currentRoom, data}: IChat){
 
     const handleMessageSubmit = async (e: any) => {
         e.preventDefault();
-        currentRoom.send("chat", myMessage);
+        if (myMessage != '')
+            currentRoom.send("chat", myMessage);
         setMyMessage('');
     }
 
@@ -34,7 +35,7 @@ export default function ChatComponent({currentRoom, data}: IChat){
 
     return (
         <div className="max-h-[50%] h-full bottom-0 w-full absolute gap-2 flex flex-col justify-end p-2 overflow-y-auto">
-            <div className=' flex flex-col-reverse gap-1 overflow-y-auto rotate gradient-mask-t-40'>
+            <div className='h-full flex flex-col-reverse gap-1 overflow-y-auto rotate gradient-mask-t-40'>
                 {
                     messages. map((msg) => {
                         return <ChatMessageComponent username={msg.username} photo='profile.svg' message={msg.message}/>

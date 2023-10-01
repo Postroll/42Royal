@@ -1,4 +1,5 @@
 const reconnect = async (reconnectionToken: any, roomID: string, client: any, setCurrentRoom: Function) =>{
+    console.log('reconnect called: '+ reconnectionToken);
     if (!client || !reconnectionToken || !roomID)
         return;
     if (!client)
@@ -57,6 +58,7 @@ const consumeReservation = async (reservation: object, client: any, setCurrentRo
         setCurrentRoom(room);
         const reconnectionToken = room.reconnectionToken.substring(room.reconnectionToken.indexOf(':') + 1, room.reconnectionToken.length);
         localStorage.setItem('reconnectionToken', reconnectionToken);
+        console.log('reconnection token stored: '+ reconnectionToken);
     } catch (e) {
         console.log("consumeReservation", e);
     }

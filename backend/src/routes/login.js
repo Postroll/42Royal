@@ -20,7 +20,7 @@ passport.use(new FortyTwoStrategy({
 }));
 
 passport.serializeUser( function(user, cb) {
-    console.log('serializing user. Id: ' + user.id +' login: '+user.login);
+    // console.log('serializing user. Id: ' + user.id +' login: '+user.login);
     cb(null, {
         id: user.id,
         login: user.username,
@@ -28,8 +28,8 @@ passport.serializeUser( function(user, cb) {
 });
 
 passport.deserializeUser(function(obj, cb) {
-    console.log('deserializing user. obj: ');
-    console.log(obj)
+    // console.log('deserializing user. obj: ');
+    // console.log(obj)
     cb(null, obj);
 });
 

@@ -8,12 +8,16 @@ export default class Game extends Schema {
         this.players = new MapSchema();
         this.chat = new ArraySchema();
         this.readyCount = 0;
-        this.status = 0;
+        this.statusCode = 0;
+        this.status = "Waiting...";
+        this.timer = 0;
     }
 }
 defineTypes(Game, {
     players: { map: Player },
     chat: [ ChatMessage ],
     readyCount: "number",
-    status: "number",
+    statusCode: "number",
+    status: "string",
+    timer: "number",
 });

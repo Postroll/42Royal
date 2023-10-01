@@ -1,4 +1,3 @@
-import { data } from "autoprefixer";
 import { useEffect, useState } from "react";
 
 interface ILobbyInfo{
@@ -28,7 +27,6 @@ export default function GameLobbyInfoComponent({leave, currentRoom, data}: ILobb
 
     useEffect(() => {
         currentRoom.send("readyState", ready);
-        console.log(data)
     }, [ready])
 
     const handleReady = () => {
@@ -52,9 +50,9 @@ export default function GameLobbyInfoComponent({leave, currentRoom, data}: ILobb
             <div className="text-white font-bold">option 3</div>
             <button className={`text-white font-bold rounded-xl p-2 px-6 active:animate-shrink ${ready ? 'bg-green-700 hover:bg-green-800' : 'bg-slate-700 hover:bg-slate-800'}`}
                 onClick={handleReady}>
-                {ready ? 'Ready!' : 'Ready?'}{` (${data.readyCount}/${data.players.size})`}
+                {ready ? 'Ready!' : 'Ready?'}{` (${data?.readyCount}/${data?.players?.size})`}
             </button>
-            <div className='text-white'>{`${data.status == 0 ? 'Waiting for other players...' : 'Game will start'}`}</div>
+            <div className='text-white'>{data?.status}</div>
         </div>
     )
 }

@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import NavBarLink from "./navbarLink";
 import ProfileDropdown from "../shared/dropdown/profileDropdown";
@@ -21,21 +21,25 @@ export default function NavBar(){
     const [userInfo, setUserInfo] = useState<IUser>();
     const [registerPanel, setRegisterPanel] = useState(false);
     const [loginPanel, setLoginPanel] = useState(false);
+    const initializedNav = useRef(false);
 
     useEffect(() => {
-        fetch('http://localhost:5000/user/me', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        })
-        .then((res) => res.json())
-        .then((data: Object) => {
-            console.log(data)
-            setUserInfo(data as IUser)
-        })
-        .catch((e) => console.log('error when fetching user data: '+e));
+        if (!initializedNav.current){
+            initializedNav.current = true;
+            fetch('http://localhost:5000/user/me', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            })
+            .then((res) => res.json())
+            .then((data: Object) => {
+                console.log(data)
+                setUserInfo(data as IUser)
+            })
+            .catch((e) => console.log('error when fetching user data: '+e));
+        }
     }, [])
 
     useEffect(() => {

@@ -3,7 +3,6 @@ import colyseus from "colyseus";
 
 import Game from "../../Schema/gameSchema.js";
 import Player from '../../Schema/playerSchema.js';
-import ChatMessage from '../../Schema/chatMessageSchema.js'
 
 import AuthLogic from "./authLogic.js";
 import GameRoomService from "./gameRoomService.js";
@@ -16,7 +15,7 @@ export class gameRoom extends colyseus.Room {
     // When room is initialized
     onCreate (options) {
         this.setState(new Game());
-
+        this.setSimulationInterval((deltaTime) => this.update(deltaTime));
         //relay chat message to all clients
         this.onMessage("chat", (client, data) => {
             console.log(data);
@@ -26,20 +25,26 @@ export class gameRoom extends colyseus.Room {
 
         //update individual client readyState and in case all clients are ready change game status
         this.onMessage("readyState", (client, data) => {
+            this.state.statusCode = 0;
+            this.state.status = "Waiting..."
             const player = this.state.players.get(client.sessionId);
             if (player.state != data)
                 this.state.readyCount +=  (data ? 1 : -1);
             player.state = data;
             if (this.state.readyCount == this.state.players.size){
-                this.state.status = 1;
-                clearTimeout
-                setTimeout(() => {
-                    this.state.status = 2;
-                }, 3000);
+                this.state.statusCode = 1;
+                this.state.timer = 5500;
             }
         });
     }
-
+    update (deltaTime) { 
+        if (this.state.statusCode == 1){
+            this.state.timer -= deltaTime;
+            this.state.status = "Game starting in " + Math.round(this.state.timer/1000);
+            if (this.state.timer < 0)
+                this.state.statusCode = 2;
+        }
+    }
     // Authorize client based on provided options before WebSocket handshake is complete
     async onAuth (client, options, request) {
         const ret = await authLogic.AddRoomData(request.rawHeaders, client, this.roomId);

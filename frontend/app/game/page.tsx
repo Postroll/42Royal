@@ -3,12 +3,11 @@ import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import * as Colyseus from "colyseus.js";
 
-
 import TableGame from '@/components/game/tableGame';
 import connectionHandler from './components/serverLobby/connectionHandler'
 
 import IUser from '../../utils/IUser'
-import IMessage from '@/utils/IMessage';
+import { staticGenerationAsyncStorage } from 'next/dist/client/components/static-generation-async-storage.external';
 
 const GameLobbyComponent = dynamic(() => import('./components/gameLobby/gameLobbyComponent'), {
     loading: () => <h1>Loading....</h1>
@@ -24,19 +23,20 @@ export default function Game(){
     const [count, setCount] = useState<number>(0);
     const [page, setPage] = useState<number>(1);
     const [user, setUser] = useState<IUser>();
-    const [currentRoom, setCurrentRoom] = useState<any>();
-    const initializedLobby = useRef(false);
-
     const [data, setData] = useState<any>();
-    const dataRef = useRef<any[]>([]);
-    dataRef.current = data;
+
+    const [currentRoom, setCurrentRoom] = useState<any>();
+    const currentRoomRef = useRef<any>();
+    currentRoomRef.current = currentRoom;
+    
+    const initializedLobby = useRef(false);
 
     useEffect(()=>{
         console.log('current room')
         console.log(currentRoom);
         if (currentRoom){
             currentRoom.onStateChange((state: any) =>{
-                setData(state);
+                setData({...state});
             })
         }
     }, [currentRoom])
@@ -50,6 +50,13 @@ export default function Game(){
             setClient(new Colyseus.Client('ws://localhost:5000'));
         };
         initializedLobby.current = true;
+        return (() =>{
+            console.log('component unmount');
+            console.log(currentRoomRef.current);
+            if (currentRoomRef.current){
+                currentRoomRef.current.leave(false);
+            }
+        })
     }, [])
 
     useEffect(() => {
@@ -85,7 +92,6 @@ export default function Game(){
         try{
             const ret = await client.getAvailableRooms(); 
             setRooms(ret);
-            console.log('Fetched rooms')
         } catch(e){
             console.log('Could not fetch rooms. Is the server down?')
         }
@@ -125,7 +131,7 @@ export default function Game(){
                         </div>
                     </div>
                 ) : (
-                    data?.status != 2 ? (
+                    data?.statusCode == 0 || data?.statusCode == 1 ? (
                         <GameLobbyComponent currentRoom={currentRoom} leave={() => connectionHandler.leave(currentRoom, setCurrentRoom)} data={data}/>
                     ):(
                         <GameComponent />
