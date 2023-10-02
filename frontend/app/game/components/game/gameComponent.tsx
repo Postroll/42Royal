@@ -57,32 +57,6 @@ export default function GameComponent({currentRoom, data}: IGame){
                         <div>This is the bottom pane.</div>
                     </Split>
                 </Split>
-                {/* <div className="overflow-y-auto">
-                    <Splitter classes={["overflow-y-auto"]} direction={SplitDirection.Horizontal} minWidths={[300, 300, 300]} gutterClassName="bg-transparent m-px">
-                        <div className='h-full bg-slate-600 whitespace-pre-wrap rounded-md overflow-y-auto break-words p-2'>
-                            {text}
-                            {text}
-                        </div>
-                        <Splitter classes={["overflow-auto"]} direction={SplitDirection.Vertical} minHeights={[100,100]} gutterClassName="bg-transparent m-px rounded-lg">
-                                <CodeEditor
-                                    className='rounded-md'
-                                    minHeight={100}
-                                    value={code}
-                                    language="c"
-                                    placeholder=""
-                                    onChange={handleCodeChange}
-                                    padding={15}
-                                    style={{
-                                    fontSize: 12,
-                                    backgroundColor: "#f5f5f5",
-                                    fontFamily:
-                                        "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace"
-                                    }}
-                                
-                            <div className='h-full bg-slate-400 rounded-md flex flex-col overflow-y-auto break-words grow p-2'>Tile 4</div>
-                        </Splitter>
-                    </Splitter>
-                </div> */}
             </div>
         </div>
     )
