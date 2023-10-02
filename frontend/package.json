@@ -15,6 +15,7 @@
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "@uiw/react-textarea-code-editor": "^1.4.4",
+    "@wcj/dark-mode": "^1.0.15",
     "autoprefixer": "10.4.15",
     "colyseus": "^0.15.8",
     "colyseus.js": "^0.15.14",

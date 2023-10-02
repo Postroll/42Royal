@@ -32,17 +32,18 @@ export default function GameComponent({currentRoom, data}: IGame){
             <div className='p-2 flex flex-col h-full w-screen gap-2'>
                 <PlayerDisplayComponent data={data}/>
                 <Split minPrimarySize='250px' minSecondarySize='250px' initialPrimarySize='40%'>
-                    <div className='overflow-y-auto h-full'>{text}{text}{text}{text}{text}{text}</div>
+                    <div className='overflow-y-auto h-full whitespace-pre-wrap text-white p-2 bg-slate-900 rounded-lg'>{text}{text}</div>
                     <Split horizontal minPrimarySize='100px' minSecondarySize='100px'>
                         <div className='overflow-auto h-full'>
                             <CodeEditor
-                                className='w-tc-editor-text rounded border-1'
+                                className='w-tc-editor-text w-tc-editor-var rounded border-1 dark:bg-black'
                                 minHeight={100}
                                 value={code}
                                 language="c"
-                                placeholder=""
+                                placeholder="Code area"
                                 onChange={handleCodeChange}
                                 padding={15}
+                                data-color-mode="dark"
                                 style={{
                                     overflow: "visible",
                                     height: "max-content",
@@ -54,7 +55,19 @@ export default function GameComponent({currentRoom, data}: IGame){
                                 }}
                             />
                         </div>
-                        <div>This is the bottom pane.</div>
+                        <div className='flex flex-col justify-between bg-black h-full p-2 rounded-lg'>
+                            <div className='text-white flex h-full'>
+                                terminal
+                            </div>
+                            <div className='flex gap-2'>
+                                <button className='text-white font-bold border-white border-2 hover:text-slate-800 hover:bg-white active:animate-shrink rounded-lg p-2'>
+                                    Test
+                                </button>
+                                <button className='text-slate-800 bg-white font-bold border-white border-2 hover:bg-gray-100 hover:border-gray-100 hover:animate-shrink rounded-lg p-2'>
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
                     </Split>
                 </Split>
             </div>
