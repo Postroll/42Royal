@@ -7,10 +7,11 @@ import Player from '../../Schema/playerSchema.js';
 
 import AuthLogic from "./authLogic.js";
 import GameRoomService from "./gameRoomService.js";
-
+import Judge0Service from "../../../services/judge0Service.js";
 
 const authLogic = new AuthLogic();
 const gameRoomService = new GameRoomService();
+const judge0Service = new Judge0Service();
 
 export class gameRoom extends colyseus.Room {
     // When room is initialized
@@ -34,13 +35,31 @@ export class gameRoom extends colyseus.Room {
             player.state = data;
             if (this.state.readyCount == this.state.players.size){
                 this.state.statusCode = 1;
-                this.state.timer = 5500;
+                this.state.timer = 100;
             }
         });
-        this.onMessage("submission", (client, data) => {
 
+        this.onMessage("submission", async (client, data) => {
+            let player = this.state.players.get(client.sessionId);
+            if (player.token || player.repushTimer > 0){
+                console.log('token or timer not settled')
+                return;
+            }
+            client.send("result", "Processing code");
+            gameRoomService.ProcessSubmission(data, client, player);
+        });
+
+        this.onMessage("test", (client, data) => {
+            let player = this.state.players.get(client.sessionId);
+            if (player.token){
+                console.log('token or timer not settled')
+                return;
+            }
+            client.send("result", "Processing code");
+            gameRoomService.ProcessTest(data, client, player);
         });
     }
+
     update (deltaTime) { 
         if (this.state.statusCode == 1){
             this.state.timer -= deltaTime;
@@ -50,7 +69,16 @@ export class gameRoom extends colyseus.Room {
                 this.lock();
             }
         }
+        this.state.players.forEach(player => { 
+            player.repushTimer -= deltaTime;
+            player.timer -= deltaTime;
+            if (player.token && player.timer < 0){
+                player.timer = 1000;
+                gameRoomService.GetResult(player.token, player, this);
+            }
+        });
     }
+    
     // Authorize client based on provided options before WebSocket handshake is complete
     async onAuth (client, options, request) {
         const ret = await authLogic.AddRoomData(request.rawHeaders, client, this.roomId);
@@ -62,7 +90,7 @@ export class gameRoom extends colyseus.Room {
     // When client successfully join the room
     async onJoin (client, options, auth) {
         const {username, elo, photo, country, campus} = await gameRoomService.InitPlayer(client.id);
-        this.state.players.set(client.sessionId, new Player(username, elo, photo, country, campus));
+        this.state.players.set(client.sessionId, new Player(client.sessionId, username, elo, photo, country, campus));
         this.state.chat.push(new ChatMessage(username, photo, 'Joined the game!'));
     }
 

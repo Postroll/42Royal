@@ -17,6 +17,7 @@ interface IGame{
 
 export default function GameComponent({currentRoom, data}: IGame){
     const [code, setCode] = useState<string>('');
+    const [result, setResult] = useState<string>('');
 
     const handleCodeChange = (e: any) =>{
         e.preventDefault;
@@ -25,7 +26,19 @@ export default function GameComponent({currentRoom, data}: IGame){
 
     useEffect(() => {
         console.log('reloadddd');
-    },[])
+        currentRoom.onMessage("result", (msg: string) => {
+            console.log(msg);
+            setResult(msg);
+        })
+    },[]) 
+
+    const handleSubmit = () =>{
+        currentRoom.send("submission", code);
+    }
+
+    const handleTest = () =>{
+        currentRoom.send("test", code);
+    }
 
     return (
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-slate-800 absolute top-0'>
@@ -57,13 +70,15 @@ export default function GameComponent({currentRoom, data}: IGame){
                         </div>
                         <div className='flex flex-col justify-between bg-black h-full p-2 rounded-lg'>
                             <div className='text-white flex h-full'>
-                                terminal
+                                {result}
                             </div>
                             <div className='flex gap-2'>
-                                <button className='text-white font-bold border-white border-2 hover:text-slate-800 hover:bg-white active:animate-shrink rounded-lg p-2'>
+                                <button className='text-white font-bold border-white border-2 hover:text-slate-800 hover:bg-white active:animate-shrink rounded-lg p-2'
+                                onClick={handleTest}>
                                     Test
                                 </button>
-                                <button className='text-slate-800 bg-white font-bold border-white border-2 hover:bg-gray-100 hover:border-gray-100 hover:animate-shrink rounded-lg p-2'>
+                                <button className='text-slate-800 bg-white font-bold border-white border-2 hover:bg-gray-100 hover:border-gray-100 hover:animate-shrink rounded-lg p-2'
+                                 onClick={handleSubmit}>
                                     Submit
                                 </button>
                             </div>

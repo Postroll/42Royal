@@ -1,8 +1,10 @@
 import User from "../../../models/user.js";
 import UserService from "../../../services/userService.js";
 import { matchMaker } from '@colyseus/core';
+import Judge0Service from "../../../services/judge0Service.js";
 
 const userService = new UserService();
+const judge0Service = new Judge0Service();
 
 export default class GameRoomService {
     constructor () {}
@@ -78,21 +80,29 @@ export default class GameRoomService {
         return 0;
     }
 
+    //Fetch user info from his websocket
+    //Params:
+    //  clientWS: The client webSocketID
+    //return: the user data stored in the database
     async GetUserDataFromWS(clientWS){
         let user;
         try{
             user = await userService.GetOneFromWebSocket(clientWS);
         }catch(e){
-            console.log('RemoveRoomData error getting client '+e)
+            console.log('GetUserDataFromWS error getting client '+e)
             return undefined;
         }
         if (!user){
-            console.log('AuthLogic.RemoveRoomData: user not found.');
+            console.log('GetUserDataFromWS: user not found.');
             return undefined;
         }
         return user;
     }
 
+    //Get the player data from the database to populate the player schema from colyseus
+    //Params:
+    //  clientWS: The client webSocketID
+    //return: the user data needed to populate the player schema from colyseus
     async InitPlayer(clientWS){
         const user = await this.GetUserDataFromWS(clientWS);
         if (user == undefined)
@@ -100,5 +110,47 @@ export default class GameRoomService {
         return {username: user.username, elo: user.elo, photo: user.photo, campus: user.campus, country: user.country};
     }
 
+    //
+    //Params:
+    //  data:
+    //  client:
+    //  player:
+    //return: 
+    async ProcessSubmission(data, client, player){
+        player.token = await judge0Service.SubmitCode(data);
+        if (!player.token)
+            return;
+        player.repushTimer = 10000;
+        player.timer = 1000;
+    }
 
+    //
+    //Params:
+    //  data:
+    //  client:
+    //  player:
+    //return: 
+    async ProcessTest(data, client, player){
+        player.token = await judge0Service.SubmitCode(data);
+        if (!player.token)
+            return;
+        player.timer = 1000;
+    }
+
+    //
+    //Params:
+    //  token:
+    //  client:
+    //  instance:
+    //return: 
+    async GetResult(token, player, instance){
+        let ret;
+        ret = await judge0Service.GetResult(token);
+        player.terminal = JSON.stringify(ret);
+        instance.clients.getById(player.sessionId).send("result", JSON.stringify(ret));
+        if (ret.status.id > 2){
+            player.token = null;
+        }
+        return ret;
+    }
 }

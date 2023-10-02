@@ -26,9 +26,13 @@ await connectMongoDB();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ 
-    origin: process.env.FRONTEND,
+    origin: [process.env.FRONTEND],
     credentials: true,
 }));
+// app.use(cors({ 
+//     origin: 'http://localhost:2358',
+//     credentials: true,
+// }));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
