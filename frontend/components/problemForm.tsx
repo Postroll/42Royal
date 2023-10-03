@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import "@uiw/react-textarea-code-editor/dist.css";
 
 import IProblem from "@/utils/IProblem";
-import InputLimited from '@/components/input/inputLimited';
+import InputLimited from '@/components/shared/input/inputLimited';
 
 interface IProblemForm{
     formName: string,

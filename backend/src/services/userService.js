@@ -76,10 +76,16 @@ export default class UserService {
 
     async GetOneFromRawHeaders(rawHeaders){
         let sessionID;
+        console.log(rawHeaders);
         rawHeaders.map((elem) =>{
-            if (elem.substring(0, 11) == 'connect.sid'){
-                sessionID = elem.substring(16, 48);
+            const index = elem.indexOf('connect.sid');
+            if (index != -1){
+                console.log(elem.substring(index + 16, index + 48));
+                sessionID = elem.substring(index + 16, index + 48);
             }
+            // if (elem.substring(0, 11) == 'connect.sid'){
+            //     sessionID = elem.substring(16, 48);
+            // }
         })
         let collection = db.collection("sessions");
         let expressSession = await collection.findOne({_id: sessionID});
@@ -90,7 +96,9 @@ export default class UserService {
                 login = expressSession.substring(parseInt(c) + 8, expressSession.length - 4);
             }
         }
+        console.log(login)
         const user = await this.GetOneUserLogin(login);
+        console.log(user)
         return user;
     }
 

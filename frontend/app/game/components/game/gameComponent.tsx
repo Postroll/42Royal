@@ -30,8 +30,6 @@ export default function GameComponent({currentRoom, data}: IGame){
 
     useEffect(() => {
         console.log('reloadddd');
-        console.log(data.problems[player.score].description);
-        console.log(player.score)
         currentRoom.onMessage("result", (msg: string) => {
             console.log(msg);
             setResult(msg);
@@ -54,15 +52,15 @@ export default function GameComponent({currentRoom, data}: IGame){
                     <div className='overflow-y-auto h-full whitespace-pre-wrap text-white p-2 bg-slate-900 rounded-lg flex flex-col gap-4'>
                         <div className='flex justify-between gap-2'>
                             <div>
-                                {data.problems[player.score].title}
+                                {data?.problems[player?.score]?.title}
                             </div>
                             <div>
-                                {player.score + 1}/{data.problems.length}
+                                {player?.score + 1}/{data?.problems?.length}
                             </div>
                         </div>
                         <div className='border h-[1px]'></div>
                         <div>
-                            {data.problems[player.score].description}
+                            {data?.problems[player?.score]?.description}
                         </div>
                     </div>
                     <Split horizontal minPrimarySize='100px' minSecondarySize='100px'>
