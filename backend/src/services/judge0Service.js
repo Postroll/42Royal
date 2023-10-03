@@ -1,8 +1,10 @@
 export default class Judge0Service{
     constructor(){}
 
-    async SubmitCode(code, client){
+    async SubmitCode(code, options){
         let token;
+        console.log(options);
+        code = code + options.initial_code;
         await fetch('http://server:2358/submissions', {
             method: 'POST',
             headers: {
@@ -11,9 +13,9 @@ export default class Judge0Service{
             body: JSON.stringify({
                 "source_code": code,
                 "number_of_runs":null,
-                "stdin":"Judge0",
-                "language_id":"50",
-                "expected_output":"hello Judge0!",
+                "stdin": options.stdin,
+                "language_id": options.language_id,
+                "expected_output": options.expected_output,
                 "cpu_time_limit":null,
                 "cpu_extra_time":null,
                 "wall_time_limit":null,
@@ -29,11 +31,10 @@ export default class Judge0Service{
         .then((res) => res.json())
         .then((data) => {token = data.token})
         .catch((e) => console.log(e))
-        return token;
+        return token; 
     }
 
     async GetResult(token){
-        console.log("GetResult judge0service")
         let ret;
         await fetch('http://server:2358/submissions/'+token, {
             method: 'GET',

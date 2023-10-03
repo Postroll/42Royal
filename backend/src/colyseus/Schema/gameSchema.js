@@ -4,7 +4,7 @@ import ChatMessage from './chatMessageSchema.js'
 import Problem from './problemSchema.js';
 
 export default class Game extends Schema {
-    constructor(gameType, language, theme, numberOfQuestions, scope, timer) {
+    constructor(gameType, language, theme, numberOfQuestions, scope, timeLimit) {
         super();
         this.players = new MapSchema();
         this.chat = new ArraySchema();
@@ -12,7 +12,7 @@ export default class Game extends Schema {
         this.readyCount = 0;
         this.statusCode = 0;
         this.status = "Waiting...";
-        this.timer = timer;
+        this.timeLimit = timeLimit;
         this.gameType = gameType;
         this.language = language;
         this.theme = theme;
@@ -28,6 +28,7 @@ defineTypes(Game, {
     statusCode: "number",
     status: "string",
     timer: "number",
+    timeLimit: "number",
     gameType: "string",
     language: "string",
     theme: "string",

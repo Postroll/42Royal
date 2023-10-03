@@ -123,8 +123,14 @@ export default class GameRoomService {
     //  client:
     //  player:
     //return: 
-    async ProcessSubmission(data, client, player){
-        player.token = await judge0Service.SubmitCode(data);
+    async ProcessSubmission(data, client, player, problem){
+        const options = {
+            stdin: problem.stdin,
+            language_id: '50',
+            expected_output: problem.expected_output,
+            initial_code: problem.initial_code,
+        };
+        player.token = await judge0Service.SubmitCode(data, options);
         if (!player.token)
             return;
         client.send("result", "Processing code");
@@ -146,7 +152,7 @@ export default class GameRoomService {
         client.send("result", "Processing code");
     }
 
-    //
+    // 
     //Params:
     //  token:
     //  client:
@@ -158,11 +164,17 @@ export default class GameRoomService {
         console.log(ret)
         player.terminal = JSON.stringify(ret);
         instance.clients.getById(player.sessionId).send("result", JSON.stringify(ret));
-        if (ret.status.id > 2){
+        console.log(ret.status.id)
+        console.log(ret.status.id == 3)
+        if (!ret?.status?.id || ret?.status?.id > 2){
             player.token = null;
-        }
-        if (ret.status.id == 3){
-            player.score += 1;
+            if (ret.status.id == 3){
+                console.log(player.score);
+                player.score += 1;
+                console.log(player.score);
+            }
+            if (player.score == instance.state.numberOfQuestions)
+                instance.state.statusCode = 3;
         }
         return ret;
     }

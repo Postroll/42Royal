@@ -32,14 +32,13 @@ export class gameRoom extends colyseus.Room {
                 this.disconnect();
             }, 100);
         }
-        console.log(this.state.problems);
         this.problems.forEach((problem) =>{
             this.state.problems.push(new Problem(problem.title, problem.description, "man"));
         })
 
         //relay chat message to all clients
         this.onMessage("chat", (client, data) => {
-            console.log(data);
+            console.log("IUGHEIUYGEUY#GU#YGFUY#G");
             const player = this.state.players.get(client.sessionId);
             this.state.chat.push(new ChatMessage(player.username, player.photo, data));
         });
@@ -54,7 +53,7 @@ export class gameRoom extends colyseus.Room {
             player.state = data;
             if (this.state.readyCount == this.state.players.size){
                 this.state.statusCode = 1;
-                this.state.timer = 100;
+                this.state.timer = 2500;
             }
         });
 
@@ -64,7 +63,7 @@ export class gameRoom extends colyseus.Room {
                 console.log('token or timer not settled')
                 return;
             }
-            gameRoomService.ProcessSubmission(data, client, player);
+            gameRoomService.ProcessSubmission(data, client, player, this.problems[player.score]);
         });
 
         this.onMessage("test", (client, data) => {
@@ -78,23 +77,26 @@ export class gameRoom extends colyseus.Room {
     }
 
     update (deltaTime) {
-        this.timer -= deltaTime;
-        if (this.timer < 0){
-            this.statusCode = 3;
-            this.status = "The game ended!"
+        if (this.state.timer > 0)
+            this.state.timer -= deltaTime;
+        if (this.state.timer < 0 && this.state.statusCode == 2){
+            this.state.statusCode = 3;
+            this.state.status = "The game ended!"
             return;
         }
-        if (this.state.statusCode == 1){
-            this.state.timer -= deltaTime;
+        else if (this.state.statusCode == 1){
             this.state.status = "Game starting in " + Math.round(this.state.timer/1000);
             if (this.state.timer < 0){
                 this.state.statusCode = 2; 
+                this.state.timer = this.state.timeLimit * 1000;
                 this.lock();
             }
         }
         this.state.players.forEach(player => { 
-            player.repushTimer -= deltaTime;
-            player.timer -= deltaTime;
+            if (player.repushTimer > 0)
+                player.repushTimer -= deltaTime;
+            if (player.timer > 0)
+                player.timer -= deltaTime;
             if (player.token && player.timer < 0){
                 player.timer = 1000;
                 gameRoomService.GetResult(player.token, player, this);
@@ -123,7 +125,7 @@ export class gameRoom extends colyseus.Room {
         const code = client.ref._closeCode;
         this.state.players.get(client.sessionId).connected = false;
         try {
-            if (consented || code === 4000){
+            if (consented || code === 4000 || this.state.statusCode == 3){
                 console.log('consented leave');
                 throw new Error("consented leave");
             }

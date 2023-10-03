@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, createContext, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import * as Colyseus from "colyseus.js";
 
@@ -17,8 +17,11 @@ const GameComponent = dynamic(() => import('./components/game/gameComponent'), {
     loading: () => <h1>Loading....</h1>
 })
 
+export const PlayerContext = createContext({});
+
 export default function Game(){
     const [client, setClient] = useState<any>();
+    const [player, setPlayer] = useState<any>({});
     const [rooms, setRooms] = useState<Array<any>>([]);
     const [count, setCount] = useState<number>(0);
     const [page, setPage] = useState<number>(1);
@@ -36,6 +39,7 @@ export default function Game(){
         if (currentRoom){
             currentRoom.onStateChange((state: any) =>{
                 setData({...state});
+                setPlayer({...state.players.get(currentRoom.sessionId)});
             })
         }
     }, [currentRoom])
@@ -122,6 +126,7 @@ export default function Game(){
     }
 
     return (
+        <PlayerContext.Provider value={{ player }}>
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-[#190C38] flex flex-col'>
             {
                 !currentRoom ? (
@@ -140,10 +145,15 @@ export default function Game(){
                     data?.statusCode == 0 || data?.statusCode == 1 ? (
                         <GameLobbyComponent currentRoom={currentRoom} leave={() => connectionHandler.leave(currentRoom, setCurrentRoom)} data={data}/>
                     ):(
+                        data?.statusCode == 2 ? (
                         <GameComponent currentRoom={currentRoom} data={data}/>
+                        ) : (
+                            <div>game ended</div>
+                        )
                     )
                 )
             }
         </div>
+        </PlayerContext.Provider>
     )
 }

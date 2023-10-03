@@ -64,8 +64,6 @@ export default class ProblemService {
     
     async GetRandomProblemGame(options){
         try{
-            console.log(options.numberOfQuestions)
-            console.log(parseInt(options.numberOfQuestions));
             const problems = await Problem.aggregate([ 
                 { $match: { 
                     status: "Accepted",
@@ -74,15 +72,7 @@ export default class ProblemService {
                     language: options.language,
                 } },
                 { $sample: { size: parseInt(options.numberOfQuestions) } } 
-                // { $match: {
-                //     status: "Accepted",
-                //     game_type: options.gameType,
-                //     language: options.language,
-                //     theme: options.theme,
-                // }},
-                // { $sample: { size: parseInt(options.numberOfQuestion) }} 
             ])
-            console.log(problems);
             return problems;
         }catch(e){
             console.log('GetRandomProblemGame error '+e);
