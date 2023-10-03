@@ -21,7 +21,7 @@ interface IGame{
 export default function GameComponent({currentRoom, data}: IGame){
     const [code, setCode] = useState<string>('');
     const [result, setResult] = useState<string>('');
-    let { player } = useContext(PlayerContext);
+    let { player } = useContext<any>(PlayerContext);
 
     const handleCodeChange = (e: any) =>{
         e.preventDefault;
