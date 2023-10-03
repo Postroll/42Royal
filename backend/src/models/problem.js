@@ -10,6 +10,7 @@ const problemSchema = new Schema(
     description: String,
     initial_code: String,
     main_code: String,
+    theme: String,
     status:{
       type: String,
       required: true,

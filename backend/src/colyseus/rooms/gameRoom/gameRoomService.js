@@ -1,10 +1,12 @@
 import User from "../../../models/user.js";
 import UserService from "../../../services/userService.js";
+import ProblemService from "../../../services/problemService.js";
 import { matchMaker } from '@colyseus/core';
 import Judge0Service from "../../../services/judge0Service.js";
 
 const userService = new UserService();
 const judge0Service = new Judge0Service();
+const problemService = new ProblemService();
 
 export default class GameRoomService {
     constructor () {}
@@ -110,6 +112,11 @@ export default class GameRoomService {
         return {username: user.username, elo: user.elo, photo: user.photo, campus: user.campus, country: user.country};
     }
 
+    async FetchProblems(options){
+        let problems = await problemService.GetRandomProblemGame(options);
+        return problems;
+    }
+
     //
     //Params:
     //  data:
@@ -120,6 +127,7 @@ export default class GameRoomService {
         player.token = await judge0Service.SubmitCode(data);
         if (!player.token)
             return;
+        client.send("result", "Processing code");
         player.repushTimer = 10000;
         player.timer = 1000;
     }
@@ -135,6 +143,7 @@ export default class GameRoomService {
         if (!player.token)
             return;
         player.timer = 1000;
+        client.send("result", "Processing code");
     }
 
     //
@@ -146,10 +155,14 @@ export default class GameRoomService {
     async GetResult(token, player, instance){
         let ret;
         ret = await judge0Service.GetResult(token);
+        console.log(ret)
         player.terminal = JSON.stringify(ret);
         instance.clients.getById(player.sessionId).send("result", JSON.stringify(ret));
         if (ret.status.id > 2){
             player.token = null;
+        }
+        if (ret.status.id == 3){
+            player.score += 1;
         }
         return ret;
     }

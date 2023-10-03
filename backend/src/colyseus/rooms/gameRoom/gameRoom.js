@@ -4,20 +4,39 @@ import { defineTypes, MapSchema, ArraySchema, Schema } from '@colyseus/schema';
 import Game from "../../Schema/gameSchema.js";
 import ChatMessage from "../../Schema/chatMessageSchema.js";
 import Player from '../../Schema/playerSchema.js';
+import Problem from "../../Schema/problemSchema.js";
 
 import AuthLogic from "./authLogic.js";
 import GameRoomService from "./gameRoomService.js";
-import Judge0Service from "../../../services/judge0Service.js";
 
 const authLogic = new AuthLogic();
 const gameRoomService = new GameRoomService();
-const judge0Service = new Judge0Service();
 
 export class gameRoom extends colyseus.Room {
+    constructor(){
+        super();
+        this.problems = [];
+    }
     // When room is initialized
-    onCreate (options) {
-        this.setState(new Game());
+    async onCreate (options) {
+        console.log(options)
+        this.setState(new Game(options.gameType, options.language, options.theme, parseInt(options.numberOfQuestions), options.private, parseInt(options.timeLimit)));
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
+        this.maxClients = options.playerLimit;
+        this.setPrivate(options.private);
+        this.problems = await gameRoomService.FetchProblems(options);
+        if (!this.problems || this.problems == undefined){
+            this.lock();
+            this.maxClients = 0;
+            setTimeout(() => {
+                this.disconnect();
+            }, 100);
+        }
+        console.log(this.state.problems);
+        this.problems.forEach((problem) =>{
+            this.state.problems.push(new Problem(problem.title, problem.description, "man"));
+        })
+
         //relay chat message to all clients
         this.onMessage("chat", (client, data) => {
             console.log(data);
@@ -45,7 +64,6 @@ export class gameRoom extends colyseus.Room {
                 console.log('token or timer not settled')
                 return;
             }
-            client.send("result", "Processing code");
             gameRoomService.ProcessSubmission(data, client, player);
         });
 
@@ -55,12 +73,17 @@ export class gameRoom extends colyseus.Room {
                 console.log('token or timer not settled')
                 return;
             }
-            client.send("result", "Processing code");
             gameRoomService.ProcessTest(data, client, player);
         });
     }
 
-    update (deltaTime) { 
+    update (deltaTime) {
+        this.timer -= deltaTime;
+        if (this.timer < 0){
+            this.statusCode = 3;
+            this.status = "The game ended!"
+            return;
+        }
         if (this.state.statusCode == 1){
             this.state.timer -= deltaTime;
             this.state.status = "Game starting in " + Math.round(this.state.timer/1000);
@@ -119,5 +142,7 @@ export class gameRoom extends colyseus.Room {
     }
 
     // Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)
-    onDispose () { }
+    onDispose () {
+        console.log("dispose");
+    }
 }

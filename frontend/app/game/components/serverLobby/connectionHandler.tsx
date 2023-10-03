@@ -24,7 +24,7 @@ const reconnect = async (reconnectionToken: any, roomID: string, client: any, se
     .catch((e) => console.log('error when fetching user data: '+e));
 }
 
-const createRoom = (client: any, setCurrentRoom: Function) =>{
+const createRoom = (client: any, setCurrentRoom: Function, option: Object) =>{
     console.log('create room: '+client);
     if (!client)
         return;
@@ -34,7 +34,7 @@ const createRoom = (client: any, setCurrentRoom: Function) =>{
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({roomName: "gameRoom", options: ''}),
+        body: JSON.stringify({roomName: "gameRoom", options: option}),
     })
     .then((res) => res.json())
     .then((data) => {

@@ -9,6 +9,7 @@ export default class GameService{
     //  roomName: the identifier you defined on gameServer.define().
     //  options: options for onCreate.
     async CreateRoom(roomName, option){
+        // console.log(option);
         try{
             const reservation = await matchMaker.create(roomName, option);
             if (!reservation)

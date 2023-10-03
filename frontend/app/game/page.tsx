@@ -7,7 +7,7 @@ import TableGame from '@/components/game/tableGame';
 import connectionHandler from './components/serverLobby/connectionHandler'
 
 import IUser from '../../utils/IUser'
-import { staticGenerationAsyncStorage } from 'next/dist/client/components/static-generation-async-storage.external';
+import CreateGameComponent from './components/serverLobby/createGameComponent';
 
 const GameLobbyComponent = dynamic(() => import('./components/gameLobby/gameLobbyComponent'), {
     loading: () => <h1>Loading....</h1>
@@ -24,6 +24,7 @@ export default function Game(){
     const [page, setPage] = useState<number>(1);
     const [user, setUser] = useState<IUser>();
     const [data, setData] = useState<any>();
+    const [createPanel, setCreatePanel] = useState<boolean>(false);
 
     const [currentRoom, setCurrentRoom] = useState<any>();
     const currentRoomRef = useRef<any>();
@@ -32,8 +33,6 @@ export default function Game(){
     const initializedLobby = useRef(false);
 
     useEffect(()=>{
-        console.log('current room')
-        console.log(currentRoom);
         if (currentRoom){
             currentRoom.onStateChange((state: any) =>{
                 setData({...state});
@@ -61,8 +60,9 @@ export default function Game(){
 
     useEffect(() => {
         const myInterval = setInterval(() =>{
-            if (!client || currentRoom)
+            if (currentRoom){
                 return;
+            }
             try{
                 updateRooms();
             } catch(e){
@@ -70,7 +70,7 @@ export default function Game(){
             }
         }, 3000);
         return () => clearInterval(myInterval);
-    }, [rooms])
+    }, [])
 
     useEffect(()=>{
         updateRooms();
@@ -116,6 +116,11 @@ export default function Game(){
         connectionHandler.joinByID(roomID, client, setCurrentRoom)
     }
 
+    const createRoomProxy = (roomParameters: Object) => {
+        connectionHandler.createRoom(client, setCurrentRoom, roomParameters)
+        setCreatePanel(false);
+    }
+
     return (
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-[#190C38] flex flex-col'>
             {
@@ -125,10 +130,11 @@ export default function Game(){
                         <div className='flex gap-4'>
                             <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.join(client, setCurrentRoom)}>Join</button>
                             <button className='text-white text-xl bg-slate-500' onClick={() =>console.log('test')}>Join by ID</button>
-                            <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.createRoom(client, setCurrentRoom)}>Create</button>
+                            <button className='text-white text-xl bg-slate-500' onClick={()=>setCreatePanel(true)}>Create</button>
                             <button className='text-white text-xl bg-slate-500' onClick={()=>connectionHandler.leave(currentRoom, setCurrentRoom)}>Leave</button>
                             <button className='text-white text-xl bg-slate-500' onClick={()=>console.log(currentRoom)}>Display room data</button>
                         </div>
+                        {createPanel && <CreateGameComponent createRoom={createRoomProxy} closePanel={()=>setCreatePanel(false)}/>}
                     </div>
                 ) : (
                     data?.statusCode == 0 || data?.statusCode == 1 ? (

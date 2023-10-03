@@ -18,7 +18,6 @@ export default function GameLobbyComponent({currentRoom, leave, data}: ICurrentR
 
     useEffect(()=>{
         setTest(data);
-        console.log('update test');
     }, [data])
 
     return (
