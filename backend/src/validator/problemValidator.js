@@ -9,13 +9,27 @@ function problemValidationRules () {
             .isLength({ min: 1 })
             .withMessage("Title cannot be empty")
             .isString(),
-        body('stdin')
+        body('language')
+            .isLength({ min: 1 })
+            .withMessage("Language cannot be empty")
+            .isString(),
+        body('theme')
+            .isLength({ min: 1 })
+            .withMessage("Theme cannot be empty")
             .isString(),
         body('description')
             .isLength({ min: 1 })
             .withMessage("Description cannot be empty")
             .isString(),
         body('initialCode')
+            .isString(),
+        body('mainCode')
+            .isString(),
+        body('workingSolution')
+            .isLength({ min: 1 })
+            .withMessage("Working solution cannot be empty")
+            .isString(),  
+        body('stdin')
             .isString(),
         body('expectedOutput')
             .isLength({ min: 1 })

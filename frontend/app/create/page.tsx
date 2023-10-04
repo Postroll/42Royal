@@ -38,6 +38,7 @@ const CodeEditor = dynamic(() => import("@uiw/react-textarea-code-editor").then(
 export default function Create(func: Function){
     const [menuCode, SetMenuCode] = useState<number>(0);
     const [menuHover, setMenuHover] = useState<number>(-1);
+    const [errors, setErrors] = useState<string[] | null>();
 
     const [title, setTitle] = useState<string>('');
     const [language, setLanguage] = useState<string>('c');
@@ -83,16 +84,31 @@ export default function Create(func: Function){
         }),
         })
         .then((res) => res.json())
-        .then((data) => console.log(data))
+        .then((data) => {
+            if (data.errors)
+                handleErrors(data.errors)
+        })
+        .catch((e) => console.log(e))
     }
 
     const handleMenuNavigation = (code: number) => {
         SetMenuCode(code);
     }
 
+    const handleErrors = (e) => {
+        let tmp: string[] = [];
+        e?.map((error: string) => {
+            tmp .push(Object.values(error)[0]);
+        })
+        setErrors(tmp);
+        setTimeout(() => {
+            setErrors(null);
+        }, 3000);
+    }
+
     return (
         <context.Provider value={tmp}>
-            <div className="flex h-screen w-screen pt-24 pb-8 px-8 bg-p1 gap-1 justify-center">
+            <div className="flex h-screen w-screen pt-24 pb-8 px-8 bg-p1 gap-1 justify-center relative">
                 <form className="text-center text-black flex lg:w-[80%]  xsm:w-full xsm:max-w-full rounded-lg gap-2 justify-center">
                     <NavigationMenuComponent menuHover={menuHover} setMenuHover={setMenuHover} handleMenuNavigation={handleMenuNavigation} menuCode={menuCode} handleSubmit={handleSubmit}/>
                     <div className="flex flex-col w-2/3 bg-gradient-to-tr from-[#1f1c21] to-[#49414e] rounded-lg p-4">
@@ -111,6 +127,16 @@ export default function Create(func: Function){
                         workingSolution={workingSolution} setWorkingSolution={setWorkingSolution}/>
                     </div>
                 </form>
+                {
+                    errors && 
+                    <div className="z-10 text-white font-bold bg-red-700 absolute w-1/4 h-fit rounded-lg bottom-0 left-0 m-2 p-2">
+                        {
+                            errors.map((error: string) => {
+                                return <div>{error}</div>
+                            })
+                        }
+                    </div>
+                }
             </div>
         </context.Provider>
     )

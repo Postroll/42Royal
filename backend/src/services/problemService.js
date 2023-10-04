@@ -3,14 +3,19 @@ import Problem from "../models/problem.js";
 export default class ProblemService {
     constructor () {}
     async CreateProblem(data){
+        console.log(data);
         await Problem.create({
-            "game_type": data.game_type,
+            "gameType": data.gameType,
             "title": data.title,
-            "stdin": data.stdin,
+            "language": data.language,
+            "theme": data.theme,
             "description": data.description,
-            "initial_code": data.initial_code,
-            "expected_output": data.expected_output,
-            "created_by": 0
+            "mainCode": data.mainCode,
+            "workingSolution": data.workingSolution,
+            "initialCode": data.initialCode,
+            "stdin": data.stdin,
+            "expectedOutput": data.expectedOutput,
+            "createdBy": 0
           });
         return 0;
     }
