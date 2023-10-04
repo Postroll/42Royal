@@ -2,7 +2,7 @@ import { body, validationResult } from 'express-validator'
 
 function problemValidationRules () {
     return [
-        body('game_type')
+        body('gameType')
             .isLength({ min: 1 })
             .withMessage("A game type must be selected"),
         body('title')
@@ -15,9 +15,9 @@ function problemValidationRules () {
             .isLength({ min: 1 })
             .withMessage("Description cannot be empty")
             .isString(),
-        body('initial_code')
+        body('initialCode')
             .isString(),
-        body('expected_output')
+        body('expectedOutput')
             .isLength({ min: 1 })
             .withMessage("Expected output cannot be empty")
             .isString(),
