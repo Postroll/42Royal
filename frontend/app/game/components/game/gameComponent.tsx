@@ -6,7 +6,6 @@ import "@uiw/react-textarea-code-editor/dist.css";
 import PlayerDisplayComponent from './playerDisplayComponent'
 
 import { PlayerContext } from '../../page';
-import useFetch from '@/utils/useFetch';
 
 const CodeEditor = dynamic(
   () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
@@ -37,12 +36,16 @@ export default function GameComponent({currentRoom, data}: IGame){
     },[])
 
     const handleSubmit = () =>{
-        currentRoom.send("submission", code);
+        if (code)
+            currentRoom.send("submission", code);
     }
 
     const handleTest = () =>{
-        currentRoom.send("test", code);
+        if (code)
+            currentRoom.send("test", code);
     }
+
+    // console.log(data);
 
     return (
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-slate-800 absolute top-0'>

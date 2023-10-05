@@ -161,19 +161,14 @@ export default class GameRoomService {
     async GetResult(token, player, instance){
         let ret;
         ret = await judge0Service.GetResult(token);
-        console.log(ret)
         player.terminal = JSON.stringify(ret);
         instance.clients.getById(player.sessionId).send("result", JSON.stringify(ret));
-        console.log(ret.status.id)
-        console.log(ret.status.id == 3)
         if (!ret?.status?.id || ret?.status?.id > 2){
             player.token = null;
-            if (ret.status.id == 3){
-                console.log(player.score);
+            if (ret?.status?.id == 3){
                 player.score += 1;
-                console.log(player.score);
             }
-            if (player.score == instance.state.numberOfQuestions)
+            if (player.score == instance.problems.length)
                 instance.state.statusCode = 3;
         }
         return ret;

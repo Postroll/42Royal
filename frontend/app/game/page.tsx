@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState, createContext, useContext } from 'react';
+import { useEffect, useRef, useState, createContext } from 'react';
 import dynamic from 'next/dynamic';
 import * as Colyseus from "colyseus.js";
 
@@ -8,6 +8,7 @@ import connectionHandler from './components/serverLobby/connectionHandler'
 
 import IUser from '../../utils/IUser'
 import CreateGameComponent from './components/serverLobby/createGameComponent';
+import GameStatsComponent from './components/gameStats/gameStats';
 
 const GameLobbyComponent = dynamic(() => import('./components/gameLobby/gameLobbyComponent'), {
     loading: () => <h1>Loading....</h1>
@@ -148,7 +149,7 @@ export default function Game(){
                         data?.statusCode == 2 ? (
                         <GameComponent currentRoom={currentRoom} data={data}/>
                         ) : (
-                            <div>game ended</div>
+                            <GameStatsComponent data={data}/>
                         )
                     )
                 )

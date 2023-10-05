@@ -58,6 +58,7 @@ export default function DetailedPanelComponent({menuCode, title, setTitle, langu
     const tmp: contextHolder = {dynamicLoading: loading, setDynamicLoading: setLoading}
     
     return (
+        <context.Provider value={tmp}>
         <>
             {
                 menuCode == 0 && (
@@ -179,5 +180,6 @@ export default function DetailedPanelComponent({menuCode, title, setTitle, langu
                     </div>
             }
         </>
+        </context.Provider>
     )
 }

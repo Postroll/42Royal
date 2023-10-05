@@ -38,7 +38,6 @@ export class gameRoom extends colyseus.Room {
 
         //relay chat message to all clients
         this.onMessage("chat", (client, data) => {
-            console.log("IUGHEIUYGEUY#GU#YGFUY#G");
             const player = this.state.players.get(client.sessionId);
             this.state.chat.push(new ChatMessage(player.username, player.photo, data));
         });
@@ -77,7 +76,7 @@ export class gameRoom extends colyseus.Room {
     }
 
     update (deltaTime) {
-        if (this.state.timer > 0)
+        if (this.state.timer >= 0)
             this.state.timer -= deltaTime;
         if (this.state.timer < 0 && this.state.statusCode == 2){
             this.state.statusCode = 3;
@@ -88,14 +87,14 @@ export class gameRoom extends colyseus.Room {
             this.state.status = "Game starting in " + Math.round(this.state.timer/1000);
             if (this.state.timer < 0){
                 this.state.statusCode = 2; 
-                this.state.timer = this.state.timeLimit * 1000;
+                this.state.timer = this.state.timeLimit * 1000 * 60;
                 this.lock();
             }
         }
         this.state.players.forEach(player => { 
-            if (player.repushTimer > 0)
+            if (player.repushTimer >= 0)
                 player.repushTimer -= deltaTime;
-            if (player.timer > 0)
+            if (player.timer >= 0)
                 player.timer -= deltaTime;
             if (player.token && player.timer < 0){
                 player.timer = 1000;
@@ -125,7 +124,8 @@ export class gameRoom extends colyseus.Room {
         const code = client.ref._closeCode;
         this.state.players.get(client.sessionId).connected = false;
         try {
-            if (consented || code === 4000 || this.state.statusCode == 3){
+            // if (consented || code === 4000 || this.state.statusCode == 3){
+            if (consented || code === 4000){
                 console.log('consented leave');
                 throw new Error("consented leave");
             }
