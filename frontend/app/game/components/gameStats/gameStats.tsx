@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GameContext } from "../../page";
 import { Line } from "react-chartjs-2";
 import 'chartjs-adapter-moment';
@@ -33,11 +33,14 @@ interface IGameStats{
   
 export default function GameStatsComponent({data}: IGameStats){
     const gameContext = useContext(GameContext);
-    const [extractedDataset, setExtractedDataset] = useState();
+    const [extractedDataset, setExtractedDataset] = useState<any>();
+    const [options, setOptions] = useState<any>();
 
     useEffect(()=>{
-        test();
+        extractDataset();
+        extractOptions();
     },[])
+
     let optionsTest2 = {
         responsive: true,
         layout: {
@@ -71,7 +74,47 @@ export default function GameStatsComponent({data}: IGameStats){
         }
     }
 
-    const test = () => {
+    const extractOptions = () => {
+        if(!data)
+            return;
+        let optionsTmp = {
+            responsive: true,
+            layout: {
+                padding: 20
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        min: 0,
+                        max: 10,
+                        stepSize : 1,
+                    }
+                },
+                x: {
+                    type: 'linear',
+                    time: {
+                        unit: 'second',
+                        displayFormats: {
+                            quarter: 'mm:ss'
+                        }
+                    },
+                    ticks: {
+                        min: 0,
+                        stepSize: 30,
+                        max: 30 * 60,
+                        callback: function(value: number) {
+                            return (Math.round(value / 60) + ':' + String(value % 60).padStart(2, '0'));
+                        }
+                    },
+                },
+            }
+        }
+        optionsTmp.scales.y.ticks.max = data.problems.length;
+        optionsTmp.scales.x.ticks.max = data.timeLimit * 60;
+        setOptions(optionsTmp);
+    }
+
+    const extractDataset = () => {
         if (!data?.players)
             return;
         let dataset = '{"datasets":[';
@@ -98,29 +141,31 @@ export default function GameStatsComponent({data}: IGameStats){
                         height={100}
                         className="rounded-lg bg-gradient-to-tr from-p1 to-p1/40"
                         data={extractedDataset}
-                        options={optionsTest2}
+                        options={options}
                     />
                     }
                 </div>
-                <div className="bg-p1 w-[95%] h-full p-4 rounded-lg items-center flex flex-col gap-2">
+                <div className="bg-p1 w-[80%] h-full p-4 rounded-lg items-center flex flex-col gap-2">
                     <div className="text-white font-bold text-xl">
                         Ranking
                     </div>
-                    <div className="flex flex-col whitespace-pre-wrap text-white rounded-lg bg-black/50 w-full max-w-[60%] p-2 items-center justify-between gap-2">
+                    <div className="flex flex-col whitespace-pre-wrap text-white rounded-lg w-full max-w-[60%] p-2 items-center gap-2">
                         {
                             data?.players &&
-                            [...data?.players].map((player) => {
-                                return <div className="flex justify-around w-full">
-                                    <div>
-                                        Rank 1
+                            [...data?.players].map((player, index) => {
+                                return (
+                                <div className="flex w-full gap-2 bg-black/40 p-2 rounded-lg justify-between">
+                                    <div className="">
+                                        Rank {index + 1}
                                     </div>
-                                    <div>
+                                    <div className="">
                                         {player[1].username} 
                                     </div>
                                     <div>
                                         score: {player[1].score}
                                     </div>
                                 </div>
+                                )
                             })
                         }
                     </div>

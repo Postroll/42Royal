@@ -141,7 +141,7 @@ export class gameRoom extends colyseus.Room {
             this.state.chat.push(new ChatMessage(player.username, player.photo, 'Left the game!'));
             console.log('leaving room');
         }  
-    }
+    } 
 
     // Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)
     onDispose () {

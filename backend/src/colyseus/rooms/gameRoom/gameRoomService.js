@@ -179,7 +179,7 @@ export default class GameRoomService {
             }
         }
         return ret;
-    } 
+    }
 
     //Set the options for the end of game graph. It is set at initialization and sent to the
     //player at the end of the game.
