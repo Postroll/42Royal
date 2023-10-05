@@ -5,7 +5,7 @@ import "@uiw/react-textarea-code-editor/dist.css";
 
 import PlayerDisplayComponent from './playerDisplayComponent'
 
-import { PlayerContext } from '../../page';
+import { GameContext } from '../../page';
 
 const CodeEditor = dynamic(
   () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
@@ -20,7 +20,7 @@ interface IGame{
 export default function GameComponent({currentRoom, data}: IGame){
     const [code, setCode] = useState<string>('');
     const [result, setResult] = useState<string>('');
-    let { player } = useContext<any>(PlayerContext);
+    let { player } = useContext<any>(GameContext);
 
     const handleCodeChange = (e: any) =>{
         e.preventDefault;
@@ -28,9 +28,7 @@ export default function GameComponent({currentRoom, data}: IGame){
     }
 
     useEffect(() => {
-        console.log('reloadddd');
         currentRoom.onMessage("result", (msg: string) => {
-            console.log(msg);
             setResult(msg);
         })
     },[])

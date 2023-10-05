@@ -76,7 +76,6 @@ export default class UserService {
 
     async GetOneFromRawHeaders(rawHeaders){
         let sessionID;
-        console.log(rawHeaders);
         rawHeaders.map((elem) =>{
             const index = elem.indexOf('connect.sid');
             if (index != -1){
@@ -96,9 +95,7 @@ export default class UserService {
                 login = expressSession.substring(parseInt(c) + 8, expressSession.length - 4);
             }
         }
-        console.log(login)
         const user = await this.GetOneUserLogin(login);
-        console.log(user)
         return user;
     }
 

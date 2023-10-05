@@ -44,7 +44,6 @@ export default class AuthLogic {
             roomID: roomID,
         }
         await user.updateOne(user);
-        // const updatedUser = await userService.GetOneUserLogin(user.login);
         return 0;
     }
 
@@ -74,7 +73,6 @@ export default class AuthLogic {
             roomID: '',
         }
         await user.updateOne(user);
-        // const updatedUser = await userService.GetOneUserLogin(user.login);
         return 0;
     }
 }

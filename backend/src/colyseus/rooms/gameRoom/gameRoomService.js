@@ -3,6 +3,7 @@ import UserService from "../../../services/userService.js";
 import ProblemService from "../../../services/problemService.js";
 import { matchMaker } from '@colyseus/core';
 import Judge0Service from "../../../services/judge0Service.js";
+import Stats from "../../Schema/StatsSchema.js";
 
 const userService = new UserService();
 const judge0Service = new Judge0Service();
@@ -78,8 +79,7 @@ export default class GameRoomService {
             roomID: '',
         }
         await user.updateOne(user);
-        // const updatedUser = await userService.GetOneUserLogin(user.login);
-        return 0;
+            return 0;
     }
 
     //Fetch user info from his websocket
@@ -112,6 +112,10 @@ export default class GameRoomService {
         return {username: user.username, elo: user.elo, photo: user.photo, campus: user.campus, country: user.country};
     }
 
+    //
+    //Params:
+    //  options:
+    //return: 
     async FetchProblems(options){
         let problems = await problemService.GetRandomProblemGame(options);
         return problems;
@@ -122,6 +126,7 @@ export default class GameRoomService {
     //  data:
     //  client:
     //  player:
+    //  problem:
     //return: 
     async ProcessSubmission(data, client, player, problem){
         const options = {
@@ -167,10 +172,54 @@ export default class GameRoomService {
             player.token = null;
             if (ret?.status?.id == 3){
                 player.score += 1;
+                player.playerStats.data += `{"x": ` + (Date.now() - instance.startTime) / 1000 + `, "y": ` + player.score + `},`;
             }
-            if (player.score == instance.problems.length)
+            if (player.score == instance.problems.length){
                 instance.state.statusCode = 3;
+            }
         }
         return ret;
+    } 
+
+    //Set the options for the end of game graph. It is set at initialization and sent to the
+    //player at the end of the game.
+    //Params:
+    //  timeLimit: the maximum timer set for the game in minutes
+    //  numberOfQuestions: the number of question set for the game. Either choosed by player or less
+    //      if there were not enough questions
+    //return: options object to pass to chartjs as parameter
+    SetOption(timeLimit, numberOfQuestions){
+        return {
+            responsive: true,
+            layout: {
+                padding: 20
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        min: 0,
+                        max: numberOfQuestions,
+                        stepSize : 1,
+                    }
+                },
+                x: {
+                    type: 'linear',
+                    time: {
+                        unit: 'second',
+                        displayFormats: {
+                            quarter: 'mm:ss'
+                        }
+                    },
+                    ticks: {
+                        min: 0,
+                        stepSize: 30,
+                        max: timeLimit * 60,
+                        callback: function(value) {
+                            return (Math.round(value / 60) + ':' + String(value % 60).padStart(2, '0'));
+                        }
+                    },
+                },
+            }
+        }
     }
 }

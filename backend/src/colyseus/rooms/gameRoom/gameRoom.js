@@ -5,6 +5,9 @@ import Game from "../../Schema/gameSchema.js";
 import ChatMessage from "../../Schema/chatMessageSchema.js";
 import Player from '../../Schema/playerSchema.js';
 import Problem from "../../Schema/problemSchema.js";
+import PlayerStats from "../../Schema/playerStatsSchema.js";
+
+import { ColorPalette } from "../../../utils/colorPalette.js"
 
 import AuthLogic from "./authLogic.js";
 import GameRoomService from "./gameRoomService.js";
@@ -16,10 +19,11 @@ export class gameRoom extends colyseus.Room {
     constructor(){
         super();
         this.problems = [];
+        this.options = {};
+        this.dataset = {"datasets":[]};
     }
     // When room is initialized
     async onCreate (options) {
-        console.log(options)
         this.setState(new Game(options.gameType, options.language, options.theme, parseInt(options.numberOfQuestions), options.private, parseInt(options.timeLimit)));
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
         this.maxClients = options.playerLimit;
@@ -32,15 +36,10 @@ export class gameRoom extends colyseus.Room {
                 this.disconnect();
             }, 100);
         }
+        this.startTime = Date.now();
         this.problems.forEach((problem) =>{
             this.state.problems.push(new Problem(problem.title, problem.description, "man"));
         })
-
-        //relay chat message to all clients
-        this.onMessage("chat", (client, data) => {
-            const player = this.state.players.get(client.sessionId);
-            this.state.chat.push(new ChatMessage(player.username, player.photo, data));
-        });
 
         //update individual client readyState and in case all clients are ready change game status
         this.onMessage("readyState", (client, data) => {
@@ -80,7 +79,6 @@ export class gameRoom extends colyseus.Room {
             this.state.timer -= deltaTime;
         if (this.state.timer < 0 && this.state.statusCode == 2){
             this.state.statusCode = 3;
-            this.state.status = "The game ended!"
             return;
         }
         else if (this.state.statusCode == 1){
@@ -114,7 +112,9 @@ export class gameRoom extends colyseus.Room {
     // When client successfully join the room
     async onJoin (client, options, auth) {
         const {username, elo, photo, country, campus} = await gameRoomService.InitPlayer(client.id);
-        this.state.players.set(client.sessionId, new Player(client.sessionId, username, elo, photo, country, campus));
+        this.state.players.set(client.sessionId, 
+            new Player(client.sessionId, username, elo, photo, country, campus,
+                new PlayerStats(ColorPalette[this.clients.length], username, `[{"x": 0, "y": 0},`)));
         this.state.chat.push(new ChatMessage(username, photo, 'Joined the game!'));
     }
 

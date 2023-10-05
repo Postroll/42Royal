@@ -34,4 +34,5 @@ defineTypes(Game, {
     theme: "string",
     numberOfQuestions: "number",
     scope: "boolean",
+    startTime: "number",
 });

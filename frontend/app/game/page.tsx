@@ -18,7 +18,7 @@ const GameComponent = dynamic(() => import('./components/game/gameComponent'), {
     loading: () => <h1>Loading....</h1>
 })
 
-export const PlayerContext = createContext({});
+export const GameContext = createContext({});
 
 export default function Game(){
     const [client, setClient] = useState<any>();
@@ -127,7 +127,7 @@ export default function Game(){
     }
 
     return (
-        <PlayerContext.Provider value={{ player }}>
+        <GameContext.Provider value={{ currentRoom, player }}>
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-[#190C38] flex flex-col'>
             {
                 !currentRoom ? (
@@ -155,6 +155,6 @@ export default function Game(){
                 )
             }
         </div>
-        </PlayerContext.Provider>
+        </GameContext.Provider>
     )
 }
