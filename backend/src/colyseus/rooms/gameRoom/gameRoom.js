@@ -38,7 +38,8 @@ export class gameRoom extends colyseus.Room {
         }
         this.startTime = Date.now();
         this.problems.forEach((problem) =>{
-            this.state.problems.push(new Problem(problem.title, problem.description, "man"));
+            console.log(problem.initialCode)
+            this.state.problems.push(new Problem(problem.title, problem.description, problem.initialCode,"man"));
         })
 
         //update individual client readyState and in case all clients are ready change game status

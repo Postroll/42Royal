@@ -132,8 +132,8 @@ export default class GameRoomService {
         const options = {
             stdin: problem.stdin,
             language_id: '50',
-            expected_output: problem.expected_output,
-            initial_code: problem.initial_code,
+            expectedOutput: problem.expectedOutput,
+            mainCode: problem.mainCode,
         };
         player.token = await judge0Service.SubmitCode(data, options);
         if (!player.token)

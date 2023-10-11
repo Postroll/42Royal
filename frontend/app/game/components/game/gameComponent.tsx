@@ -31,6 +31,8 @@ export default function GameComponent({currentRoom, data}: IGame){
         currentRoom.onMessage("result", (msg: string) => {
             setResult(msg);
         })
+        setCode(data?.problems[player?.score]?.initialCode);
+        console.log(data?.problems[player?.score]?.description);
     },[])
 
     const handleSubmit = () =>{
@@ -42,8 +44,6 @@ export default function GameComponent({currentRoom, data}: IGame){
         if (code)
             currentRoom.send("test", code);
     }
-
-    // console.log(data);
 
     return (
         <div className='max-h-screen max-w-screen h-screen w-screen pt-14 bg-slate-800 absolute top-0'>

@@ -3,19 +3,20 @@ export default class Judge0Service{
 
     async SubmitCode(code, options){
         let token;
-        console.log(options);
-        code = code + options.initial_code;
+        code = options.mainCode + code;
+        console.log("-----------code------------")
+        console.log(code);
         await fetch('http://server:2358/submissions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
+            body:  JSON.stringify({
                 "source_code": code,
                 "number_of_runs":null,
                 "stdin": options.stdin,
                 "language_id": options.language_id,
-                "expected_output": options.expected_output,
+                "expected_output": options.expectedOutput,
                 "cpu_time_limit":null,
                 "cpu_extra_time":null,
                 "wall_time_limit":null,
@@ -32,7 +33,7 @@ export default class Judge0Service{
         .then((data) => {token = data.token})
         .catch((e) => console.log(e))
         return token; 
-    }
+    } 
 
     async GetResult(token){
         let ret;

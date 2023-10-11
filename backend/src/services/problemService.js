@@ -47,7 +47,7 @@ export default class ProblemService {
 
     async UpdateOne(data, state){
         if (state){
-            data.reviewed_by = ["admin"];
+            data.reviewedBy = ["admin"];
             if (state == 'true')
                 data.status = "Accepted";
             else
@@ -69,10 +69,11 @@ export default class ProblemService {
     
     async GetRandomProblemGame(options){
         try{
+            console.log(options)
             const problems = await Problem.aggregate([ 
                 { $match: { 
                     status: "Accepted",
-                    game_type: options.gameType,
+                    gameType: options.gameType,
                     theme: options.theme,
                     language: options.language,
                 } },
