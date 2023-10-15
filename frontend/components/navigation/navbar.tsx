@@ -26,7 +26,7 @@ export default function NavBar(){
     useEffect(() => {
         if (!initializedNav.current){
             initializedNav.current = true;
-            fetch('http://localhost:5000/user/me', {
+            fetch(process.env.NEXT_PUBLIC_BACKEND +'/user/me', {
             method: 'GET',
             credentials: 'include',
             headers: {

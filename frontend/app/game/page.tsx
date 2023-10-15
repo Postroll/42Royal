@@ -103,7 +103,7 @@ export default function Game(){
     }
 
     const fetchUser = async () =>{
-        fetch('http://localhost:5000/user/me', {
+        fetch(process.env.NEXT_PUBLIC_BACKEND+ '/user/me', {
             method: 'GET',
             credentials: 'include',
             headers: {

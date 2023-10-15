@@ -24,7 +24,7 @@ export default function ReviewForm({cancelReview}: IReviewForm){
     }, [problem])
 
     const getRandomProblem = async () =>{
-        await fetch('http://localhost:5000/problem/review', {
+        await fetch(process.env.NEXT_PUBLIC_BACKEND +'/problem/review', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export default function ReviewForm({cancelReview}: IReviewForm){
     const submitReview = async (state: boolean) =>{
         if (!problem)
             return;
-        const ret = await fetch('http://localhost:5000/problem/review/'+problem?._id+"?state="+state, {
+        const ret = await fetch(process.env.NEXT_PUBLIC_BACKEND +'/problem/review/'+problem?._id+"?state="+state, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ const reconnect = async (reconnectionToken: any, roomID: string, client: any, se
         return;
     if (!client)
         return;
-    fetch('http://localhost:5000/game/reconnect', {
+    fetch(process.env.NEXT_PUBLIC_BACKEND +'/game/reconnect', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -28,7 +28,7 @@ const createRoom = (client: any, setCurrentRoom: Function, option: Object) =>{
     console.log('create room: '+client);
     if (!client)
         return;
-    fetch('http://localhost:5000/game/create', {
+    fetch(process.env.NEXT_PUBLIC_BACKEND +'/game/create', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -67,7 +67,7 @@ const consumeReservation = async (reservation: object, client: any, setCurrentRo
 const joinByID = (roomID: number, client: any, setCurrentRoom: Function) =>{
     if (!client)
     return;
-    fetch('http://localhost:5000/game/joinID', {
+    fetch(process.env.NEXT_PUBLIC_BACKEND + '/game/joinID', {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -91,7 +91,7 @@ const joinByID = (roomID: number, client: any, setCurrentRoom: Function) =>{
 const join = (client: any, setCurrentRoom: Function) =>{
     if (!client)
         return;
-    fetch('http://localhost:5000/game/join', {
+    fetch(process.env.NEXT_PUBLIC_BACKEND + '/game/join', {
     method: 'POST',
     credentials: 'include',
     headers: {

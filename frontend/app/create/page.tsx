@@ -32,7 +32,8 @@ export default function Create(func: Function){
     ]);
     
     const handleSubmit = async () => {
-        const ret = await fetch('http://localhost:5000/problem', {
+        console.log(process.env.NEXT_PUBLIC_BACKEND);
+        const ret = await fetch(process.env.NEXT_PUBLIC_BACKEND + '/problem', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

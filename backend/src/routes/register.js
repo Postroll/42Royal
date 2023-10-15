@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     if (ret?.status == 'created'){
         console.log('serializing user. login: '+formValues.email);
         req.session.passport = {user: {login: formValues.email}};
-        res.status(201).send({url: 'http://localhost:3000/profile', status: 'success'});
+        res.status(201).send({url: process.env.FRONTEND + '/profile', status: 'success'});
     }
     else
         res.status(400).send({ status: 'failure', error: ret?.value });

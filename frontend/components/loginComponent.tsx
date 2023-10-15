@@ -18,7 +18,7 @@ export default function LoginPanel({setLoginPanel, setRegisterPanel}: ILogin) {
     const [error, setError] = useState<string | undefined>('');
 
     const loginFirebase = async () =>{
-        await fetch('http://localhost:5000/login/', {
+        await fetch(process.env.NEXT_PUBLIC_BACKEND +'/login/', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -55,7 +55,7 @@ export default function LoginPanel({setLoginPanel, setRegisterPanel}: ILogin) {
                         {`Register ->`}
                     </button>
                     <h1 className="font-bold text-xl mb-6">Login!</h1>
-                    <a href='http://localhost:5000/login/42' onClick={() => setLoginPanel(false)} className= "text-white bg-green-500 rounded-lg hover:animate-shrink hover:bg-green-700 p-1 px-2">Login with 42</a>
+                    <a href={process.env.NEXT_PUBLIC_BACKEND +'/login/42'} onClick={() => setLoginPanel(false)} className= "text-white bg-green-500 rounded-lg hover:animate-shrink hover:bg-green-700 p-1 px-2">Login with 42</a>
                     <p className="my-4">Or</p>
                     <Input placeholder="Email" value={email} setValue={setEmail}/>
                     <Input placeholder="Password" value={password} setValue={setPassword}/>

@@ -24,7 +24,7 @@ export default function ProblemForm({formName, problem, setEdit, updateForm}: IP
 
     const handleSubmit = async () =>{
         console.log(newProblem);
-        const ret = await fetch('http://localhost:5000/problem/'+newProblem._id, {
+        const ret = await fetch(process.env.NEXT_PUBLIC_BACKEND +'/problem/'+newProblem._id, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',

@@ -27,7 +27,7 @@ export default function Review(){
 
     const getAllProblems = async () => {
         setProblems([]);
-        await fetch('http://localhost:5000/problem?page='+page, {
+        await fetch(process.env.NEXT_PUBLIC_BACKEND + '/problem?page='+page, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default function Review(){
     }
 
     const deleteProblem = async (id: string) => {
-        await fetch('http://localhost:5000/problem/'+id, {
+        await fetch(process.env.NEXT_PUBLIC_BACKEND +'/problem/'+id, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

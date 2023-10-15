@@ -55,25 +55,25 @@ router.get('/42/return',
     async function(req, res) {
         if (await userService.CreateUser(req.user._json)){
             console.log("user created");
-            res.redirect('http://localhost:3000/profile');
+            res.redirect(process.env.FRONTEND + '/profile');
         }
         else{
             console.log("user found");
-            res.redirect('http://localhost:3000/');
+            res.redirect(process.env.FRONTEND);
         }
     }
 );
 
 router.get('/profile',
     ensureLoggedIn(),
-    passport.authenticate('session', { failureRedirect: 'http://localhost:3000/' }),
+    passport.authenticate('session', { failureRedirect: process.env.FRONTEND }),
     function(req, res){
       res.send({ user: req.user });
     }
 );
 
 router.get('/status',
-    passport.authenticate('session', { failureRedirect: 'http://localhost:3000/' }),
+    passport.authenticate('session', { failureRedirect: process.env.FRONTEND }),
     function(req, res) {
         console.log(req.session.passport);
         res.send({ userInfo: req.session.passport });
@@ -82,7 +82,7 @@ router.get('/status',
 
 router.get('/logout', function(req, res){
     req.session.destroy(() => console.log("logged out"));
-    res.redirect('http://localhost:3000/');
+    res.redirect(process.env.FRONTEND);
 });
 
 export default router;

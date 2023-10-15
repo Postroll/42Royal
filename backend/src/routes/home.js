@@ -6,7 +6,7 @@ const router = express.Router();
 const userService = new UserService();
 
 router.get("/", (req, res) => {
-    passport.authenticate('session', { failureRedirect: 'http://localhost:3000/' }),
+    passport.authenticate('session', { failureRedirect: process.env.FRONTEND }),
     function(req, res) {
         console.log(req.session);
         res.status(201).json({ userInfo: req.session });

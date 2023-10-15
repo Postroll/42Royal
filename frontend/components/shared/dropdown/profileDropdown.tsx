@@ -34,7 +34,7 @@ export default function ProfileDropdown({ username, photo, loggedIn }: IProfileD
                         Settings
                     </Dropdown.Item>
                     <Dropdown.Divider />
-                    <Dropdown.Item tabIndex={-1} href='http://localhost:5000/login/logout'>
+                    <Dropdown.Item tabIndex={-1} href={process.env.NEXT_PUBLIC_BACKEND +'/login/logout'}>
                         Sign Out
                     </Dropdown.Item>
                 </Dropdown>
