@@ -55,6 +55,7 @@ services:
       - 3000:3000
     environment:
       - NEXT_PUBLIC_BACKEND=${BACKEND}
+      - NEXT_PUBLIC_IP=${IP}
     volumes:
       -  ./frontend:/app
     restart: always
