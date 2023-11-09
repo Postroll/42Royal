@@ -38,7 +38,7 @@ Another goal of this project was to learn new web technologies from scratch. It 
 * ![Docker]
 * ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-For processing code I used Judge0 (https://judge0.com/)
+To process code I used Judge0 (https://judge0.com/)
 
 For WebSocket I used Colyseus.io (https://colyseus.io/)
 
