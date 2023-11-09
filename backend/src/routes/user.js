@@ -13,6 +13,7 @@ router.get("/", (req, res) => {
 router.get("/me",
     passport.authenticate('session'),
     async (req, res) => {
+        console.log(req.session);
         if (!req.session.passport){
             res.status(401).send();
             return ;

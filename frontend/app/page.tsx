@@ -30,8 +30,8 @@ export default function Home() {
                 42 Royal
               </h1>
               <p className=" pt-6 text-white w-5/12 text-md text-right pointer-events-none z-0">
-                Welcome to the competitive coding game made for 42 students!
-                Challenge your friends, improved your rank, bring honor to your campus!
+                Lorem ipsum dolor sit amet,  adipiscing elit.
+                Ut enim ad minim veniam, exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </p>
               <div className="mt-8">
                 <Link href='/game' onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)} className="z-0 whitespace-pre-wrap w-fit text-lg place-self-end bg-white text-black rounded-lg py-2 px-2 mt-4 font-bold justify-self-center hover:animate-shrink hover:text-white hover:bg-transparent border-white border-2">
@@ -45,9 +45,9 @@ export default function Home() {
             <Table title="Top player" value="wins" objects={''}/>
           </div> */}
           <div className="flex flex-wrap z-0 gap-5 justify-center -mt-10  xl:-mt-0 lg:mt-0 xl:gap-20 xl:animation-all duration-400">
-            <Card logo={game_logo} text='game played' stat="666" dur={3}/>
-            <Card logo={players_logo} text='player registered' stat="66666" dur={3}/>
-            <Card logo={code_logo} text='code submited' stat="6666" dur={3}/>
+            <Card logo={game_logo} text='game played' stat="12345" dur={3}/>
+            <Card logo={players_logo} text='player registered' stat="123" dur={3}/>
+            <Card logo={code_logo} text='code submited' stat="123456" dur={3}/>
           </div>
         </div>
       </section>

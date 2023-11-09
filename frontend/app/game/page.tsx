@@ -51,7 +51,7 @@ export default function Game(){
         if (!initializedLobby.current && !client){
             console.log('create client');
             initializedLobby.current = true;
-            setClient(new Colyseus.Client('ws://'+ process.env.NEXT_PUBLIC_IP+':5000'));
+            setClient(new Colyseus.Client('ws://localhost:5000'));
         };
         initializedLobby.current = true;
         return (() =>{
