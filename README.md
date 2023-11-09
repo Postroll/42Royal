@@ -20,7 +20,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![main-screenshot]
 
 This project is just a POC and was made mainly to learn and try some new stuff.
 
@@ -29,6 +29,8 @@ The idea of this project came to me during the core curriculum of the Ecole 42. 
 Another goal of this project was to learn new web technologies from scratch. It was my second web project after Transcendance (last project of the core curriculum of Ecole 42, an online pong game).
 
 ### Built With
+
+![diagram-screenshot]
 
 * [![Next][Next.js]][Next-url]
 * ![Express.js]
@@ -44,14 +46,19 @@ For WebSocket I used Colyseus.io (https://colyseus.io/)
 ## Features
 
 *  Game
-  - Connected users can join or create a game
-  - The game start in a lobby with a chat waiting for all players to be ready
-  - The game last until a player has solved all the problems or until the time limit is reached
-  - A ranking page is displayed
+    - Connected users can join or create a game
+    - The game start in a lobby with a chat waiting for all players to be ready
+    - The game last until a player has solved all the problems or until the time limit is reached
+    - A ranking page is displayed
+![createRoom-screenshot]
+![game-screenshot]
+
 * Problems
   - It is possible to create and submit a new problem
   - New problems have a status of 'under review' and need to be accepted in the review page
   - There is an administration panel to see and edit any problems
+![newProblem-screenshot]
+![adminPanel-screenshot]
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -64,3 +71,9 @@ For WebSocket I used Colyseus.io (https://colyseus.io/)
 [MongoDB]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
 [judge0-url]: https://judge0.com/
 [Docker]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
+[main-screenshot]: frontend/assets/main.PNG
+[diagram-screenshot]: frontend/assets/ProjectDiagram.PNG
+[adminPanel-screenshot]: frontend/assets/adminPanel.PNG
+[createRoom-screenshot]: frontend/assets/createRoom.PNG
+[game-screenshot]: frontend/assets/gameMode.PNG
+[newProblem-screenshot]: frontend/assets/newProblem.PNG
